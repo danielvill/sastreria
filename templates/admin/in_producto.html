@@ -1,0 +1,49 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+<style>
+    #pvp::before {
+        content: '$';
+        position: absolute;
+        margin-left: 5px;
+    }
+    </style>
+    <div class="">
+        <div class="panel panel-info">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="alert alert-danger">
+                {{ messages[0] }}
+            </div>
+            {% endif %}
+            {% endwith %}
+            <div class="panel-heading">
+                Ingreso de Productos
+            </div>
+            <div class="panel-body" class="">
+                <form action="/admin/in_producto"  method="post" enctype="multipart/form-data" >
+                    <div class="form-group">
+                        <label>Ingresar Nombre</label>
+                        <input class="form-control " type="text" name="nombre" />
+                    </div>
+                    <div class="form-group">
+                        <label>Ingresar Precio</label>
+                        <input class="form-control" type="number" name="precio"/>
+                    </div>
+                    <div class="form-group">
+                        <label>Ingresar Categoria</label>
+                        <input class="form-control" type="text" name="categoria" />
+                    </div>
+                    <div class="form-group">
+                        <label>Ingresar Descripcion</label>
+                        <input class="form-control" type="text" name="descripcion" />
+                    </div>
+                    <div class="form-group">
+                        <label>Ingresar Imagen</label>
+                        <input class="form-control" type="file" name="imagen" />
+                    </div>
+                    <button type="submit" class="btn btn-info">Enviar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
