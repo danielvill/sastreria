@@ -60,7 +60,7 @@ def edit_cli(edacli):
     if nombre and apellido  and telefono and correo and contraseña :
         cliente.update_one({'id_cliente' : edacli}, {'$set' : {'nombre' : nombre, 'apellido' : apellido, "telefono" : telefono , "correo" : correo , "contraseña" : contraseña}})
         flash("Editado correctamente ")
-        return redirect(url_for('cliente.v_user'))
+        return redirect(url_for('cliente.v_cli'))
     else:
         return render_template('admin/cliente.html')
 

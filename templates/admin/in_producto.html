@@ -7,8 +7,8 @@
         margin-left: 5px;
     }
     </style>
-    <div class="">
-        <div class="panel panel-info">
+    <div class="" >
+        <div class="panel panel-success" >
             {% with messages = get_flashed_messages() %}
             {% if messages %}
             <div class="alert alert-danger">
@@ -19,8 +19,8 @@
             <div class="panel-heading">
                 Ingreso de Productos
             </div>
-            <div class="panel-body" class="">
-                <form action="/admin/in_producto"  method="post" enctype="multipart/form-data" >
+            <div class="panel-body" >
+                <form action="/admin/in_producto"  method="post" enctype="multipart/form-data"   >
                     <div class="form-group">
                         <label>Ingresar Nombre</label>
                         <input class="form-control " type="text" name="nombre" />
@@ -31,11 +31,24 @@
                     </div>
                     <div class="form-group">
                         <label>Ingresar Categoria</label>
-                        <input class="form-control" type="text" name="categoria" />
+                        <select name="categoria" id="categoria" class="form-control">
+                            <option value="Hombre">Hombre</option>
+                            <option value="Mujer">Mujer</option>
+                            <option value="Niño">Niño</option>
+                            <option value="Niña">Niña</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>Ingresar Subcategoria</label>
-                        <input class="form-control" type="text" name="subcategoria" />
+                        <select name="subcategoria" id="subcategoria" class="form-control">
+                            <option value="Blusas">Blusas</option>
+                            <option value="Pantalones">Pantalones</option>
+                            <option value="Zaco">Zaco</option>
+                            <option value="Camisas">Camisas</option>
+                            <option value="Cinturones">Cinturones</option>
+                            <option value="Faldas">Faldas</option>
+                            <option value="Sudaderas">Sudaderas</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>Ingresar Descripcion</label>
@@ -45,7 +58,7 @@
                         <label>Ingresar Imagen</label>
                         <input class="form-control" type="file" name="imagen" />
                     </div>
-                    <button type="submit" class="btn btn-info">Enviar</button>
+                    <button type="submit" class="btn btn-success">Enviar</button>
                 </form>
             </div>
         </div>

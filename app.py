@@ -34,9 +34,24 @@ def about():
     return render_template('about.html')
 
 # * Vista de Shop 
-@app.route('/shop',methods=['GET','POST'])
+@app.route('/shop', methods=['GET', 'POST'])
 def shop():
-    return render_template('shop.html')
+    page = int(request.args.get('page', 1))
+    productos_per_page = 10
+    productos = list(db["producto"].find().skip((page-1)*productos_per_page).limit(productos_per_page))
+    total_productos = db["producto"].count_documents({})
+    total_pages = (total_productos + productos_per_page - 1) // productos_per_page
+    
+    categorias = {}
+    for producto in db["producto"].find():
+        categoria = producto['categoria']
+        subcategoria = producto['subcategoria']
+        if categoria not in categorias:
+            categorias[categoria] = []
+        if subcategoria not in categorias[categoria]:
+            categorias[categoria].append(subcategoria)
+    
+    return render_template('shop.html', productos=productos, categorias=categorias, total_pages=total_pages, current_page=page)
 
 
 #* Este es para cerrar la sesion 
