@@ -50,6 +50,7 @@ def adpro():
         nombre = request.form['nombre']
         precio = request.form['precio']
         categoria = request.form['categoria']
+        subcategoria = request.form['subcategoria']
         descripcion = request.form['descripcion']
         
         if 'imagen' not in request.files:
@@ -65,9 +66,9 @@ def adpro():
                 file.save(file_path)
                 imagen_filename = filename
             
-        produc = Producto(id_producto, nombre, precio, categoria,descripcion, imagen_filename)
+        produc = Producto(id_producto, nombre, precio, categoria,subcategoria,descripcion, imagen_filename)
         producto.insert_one(produc.ProductoDBCollection())
-        flash("Producto agregado correctamente")
+        flash("Producto agregado correctamente","success")
         return redirect(url_for('producto.adpro'))
     else:
         return render_template('admin/in_producto.html')
@@ -86,6 +87,7 @@ def edit_pro(edipro):
         nombre = request.form["nombre"]
         precio = request.form["precio"]
         categoria = request.form["categoria"]
+        subcategoria = request.form["subcategoria"]
         descripcion = request.form["descripcion"]
 
         if "imagen" in request.files and request.files['imagen'].filename != '':
@@ -98,7 +100,7 @@ def edit_pro(edipro):
         else:
             imagen_filename = producto_existente['imagen']
 
-        campos = [id_producto, nombre, precio, categoria, descripcion]
+        campos = [id_producto, nombre, precio, categoria,subcategoria, descripcion]
 
         try:
             if all(campos):
@@ -107,17 +109,18 @@ def edit_pro(edipro):
                     "nombre": nombre,
                     "precio": precio,
                     "categoria": categoria,
+                    "subcategoria": subcategoria,
                     "descripcion": descripcion,
                     "imagen": imagen_filename
                 }})
-                flash("Producto " + nombre + " actualizado correctamente")
+                flash("Producto " + nombre + " actualizado correctamente","success")
                 return redirect(url_for('producto.v_product'))
             else:
-                flash("Todos los campos son obligatorios")
+                flash("Todos los campos son obligatorios","alert")
                 return redirect(url_for('producto.edit_pro', edipro=edipro))
         except Exception as e:
             print(e)
-            flash("Ha ocurrido un error")
+            flash("Ha ocurrido un error","alert")
             return redirect(url_for('producto.edit_pro', edipro=edipro))
 
     return render_template('admin/edit_pro.html', producto=producto_existente)
@@ -131,9 +134,9 @@ def delete_pr(eliadpro):
     if documento:
         nombre = documento["nombre"]
         producto.delete_one({"id_producto": eliadpro})
-        flash("Producto " + nombre + " eliminado correctamente")
+        flash("Producto " + nombre + " eliminado correctamente","success")
     else:
-        flash("Producto no encontrado")
+        flash("Producto no encontrado","alert")
     return redirect(url_for('producto.v_product'))
 
 # Visualizar producto

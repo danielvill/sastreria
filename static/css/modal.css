@@ -1,6 +1,6 @@
 /* Cambiar el color del botón Guardar a verde */
 .ui-dialog .guardar.ui-button {
-    background: #3071A9;
+    background: #59AB6E;
     color: white;
     /* Cambiar el color del texto a blanco */
   }

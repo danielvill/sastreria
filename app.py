@@ -28,13 +28,23 @@ app.config['UPLOAD_FOLDER'] = 'D:/Sastreria/static/img/producto'
 def run():
     return render_template('index.html')
 
+# * Vista de About 
+@app.route('/about',methods=['GET','POST'])
+def about():
+    return render_template('about.html')
+
+# * Vista de Shop 
+@app.route('/shop',methods=['GET','POST'])
+def shop():
+    return render_template('shop.html')
+
 
 #* Este es para cerrar la sesion 
 @app.route('/logout')
 def logout():
     # Elimina el usuario de la sesión si está presente
     session.pop('username', None)
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
 
 
 #* Vista Ingreso de admin y usuarios

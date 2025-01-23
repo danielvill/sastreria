@@ -24,9 +24,7 @@ def get_next_sequence(name):
 
 @cliente.route("/cliente/in_cliente",methods=['GET','POST'])
 def adcli():
-    if 'username' not in session:
-        flash("Inicia sesion con tu usuario y contraseña")
-        return redirect(url_for('cliente.index'))  # * Redirige al usuario al inicio si no está en la sesión
+    
     
     if request.method == 'POST':
         id_cliente = str(get_next_sequence('cliId')).zfill(1)
@@ -83,6 +81,6 @@ def delete_cli(eliacli):
 def v_cli():
     if 'username' not in session:
         flash("Inicia sesion con tu usuario y contraseña")
-        return redirect(url_for('cliente.index'))
+        return redirect(url_for('cliente.index'))  # * Redirige al usuario al inicio si no está en la sesión
     cliente = db['cliente'].find()
     return render_template("admin/cliente.html", cliente=cliente)
