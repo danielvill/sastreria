@@ -1,20 +1,24 @@
 class Pedido:
-    def __init__(self,id_pedido,id_cliente,fecha_pedido,estado_pedido,productos,precio  ):
+    def __init__(self,id_pedido,nombre,telefono,id_producto,producto,cantidad,precio ,resultado ):
         
         self.id_pedido=id_pedido
-        self.id_cliente=id_cliente
-        self.fecha_pedido=fecha_pedido
-        self.estado_pedido=estado_pedido
-        self.productos=productos
+        self.nombre=nombre
+        self.telefono=telefono
+        self.id_producto=id_producto
+        self.producto=producto
+        self.cantidad=cantidad
         self.precio=precio
-
+        self.resultado= resultado
+        
         
     def PedidoDBCollection(self):
         return{
             "id_pedido": self.id_pedido,
-            "id_cliente": self.id_cliente,
-            "fecha_pedido": self.fecha_pedido,
-            "estado_pedido": self.estado_pedido,
-            "productos": self.productos,
-            "precio": self.precio
+            "nombre": self.nombre,
+            "telefono": self.telefono,
+            "id_producto": self.id_producto,
+            "producto": self.producto,
+            "cantidad": self.cantidad,
+            "precio": self.precio,
+            "resultado": self.resultado,
         }

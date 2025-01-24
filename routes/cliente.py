@@ -29,7 +29,7 @@ def adcli():
     if request.method == 'POST':
         id_cliente = str(get_next_sequence('cliId')).zfill(1)
         cliente = db["cliente"]
-        nombre = request.form['nombre']
+        user = request.form['user']
         apellido = request.form['apellido']
         telefono = request.form['telefono']
         correo = request.form['correo']
@@ -38,27 +38,35 @@ def adcli():
         exist_telefono = cliente.find_one({"telefono":telefono})
 
         if exist_telefono:
-            flash("El número de teléfono ya está registrado")
+            flash("El número de teléfono ya está registrado" ,"alert")
             return render_template('cliente/in_cliente.html')
         else:
-            client = Cliente(id_cliente,nombre,apellido,telefono,correo,contraseña)
+            client = Cliente(id_cliente,user,apellido,telefono,correo,contraseña)
             cliente.insert_one(client.ClienteDBCollection())
-            flash("Cliente registrado")
-            return redirect(url_for('cliente.adcli'))
+            return redirect(url_for('cliente.envio'))
     else:
         return render_template('cliente/in_cliente.html')
+
+
+@cliente.route("/cliente/envio",methods=['GET','POST'])
+def envio():
+     # * Redirige al usuario al inicio si no está en la sesión
+    return render_template("cliente/envio.html")
+
+
+
 
 @cliente.route('/edit_cli/<string:edacli>', methods=['GET', 'POST'])#
 def edit_cli(edacli):
     cliente = db['cliente']
-    nombre = request.form["nombre"]
+    user = request.form["user"]
     apellido = request.form["apellido"]
     telefono = request.form["telefono"]
     correo = request.form['correo']
     contraseña = request.form['contraseña']
     
-    if nombre and apellido  and telefono and correo and contraseña :
-        cliente.update_one({'id_cliente' : edacli}, {'$set' : {'nombre' : nombre, 'apellido' : apellido, "telefono" : telefono , "correo" : correo , "contraseña" : contraseña}})
+    if user and apellido  and telefono and correo and contraseña :
+        cliente.update_one({'id_cliente' : edacli}, {'$set' : {'user' : user, 'apellido' : apellido, "telefono" : telefono , "correo" : correo , "contraseña" : contraseña}})
         flash("Editado correctamente ")
         return redirect(url_for('cliente.v_cli'))
     else:
@@ -70,10 +78,10 @@ def edit_cli(edacli):
 def delete_cli(eliacli):
     cliente = db["cliente"]
     documento =  cliente.find_one({"id_cliente":eliacli})
-    nombre = documento["nombre"]
+    user = documento["user"]
     apellido = documento["apellido"]
     cliente.delete_one({"id_cliente":eliacli})
-    flash("Cliente  "+ nombre +" "+ apellido + " eliminado correctamente") 
+    flash("Cliente  "+ user +" "+ apellido + " eliminado correctamente") 
     return redirect(url_for('cliente.v_cli'))
 
 # * Visualizar cliente
@@ -81,6 +89,6 @@ def delete_cli(eliacli):
 def v_cli():
     if 'username' not in session:
         flash("Inicia sesion con tu usuario y contraseña")
-        return redirect(url_for('cliente.index'))  # * Redirige al usuario al inicio si no está en la sesión
+        return redirect(url_for('cliente.index')) # * Redirige al usuario al inicio si no está en la sesión
     cliente = db['cliente'].find()
     return render_template("admin/cliente.html", cliente=cliente)

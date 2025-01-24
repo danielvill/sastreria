@@ -1,0 +1,62 @@
+{% extends "cliente/layout.html" %}
+{% block content %}
+
+<div class="container py-5">
+    <div class="row py-5">
+        <form class="col-md-9 m-auto" action="/cliente/in_medida" method="post" role="form">
+            <div class="row">
+                <div class="form-group col-md-6 mb-3">
+                    <label for="inputname">id_cliente</label>
+                    <input type="text" class="form-control mt-1" id="name" name="id_cliente" placeholder="">
+                </div>
+                <div class="form-group col-md-6 mb-3">
+                    <label for="inputemail">Medida del busto</label>
+                    <input type="number" class="form-control mt-1" id="busto" name="busto" placeholder="medida en cm">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="inputsubject">Medida de cintura</label>
+                <input type="number" class="form-control mt-1" id="cintura" name="cintura" placeholder="cintura">
+            </div>
+            <div class="mb-3">
+                <label for="inputmessage">Medida de cadera</label>
+                <input type="number" class="form-control mt-1" id="cadera" name="cadera" placeholder="cadera"
+                    rows="8"></input>
+            </div>
+
+
+            <div class="mb-3">
+                <label for="inputmessage">Medida de espalda</label>
+                <input type="number" class="form-control mt-1" id="espalda" name="espalda"
+                    placeholder="medida en cm" rows="8"></input>
+            </div>
+            <div class="mb-3">
+                <label for="inputmessage">Medida en mangas</label>
+                <input type="number" class="form-control mt-1" id="mangas" name="mangas"
+                    placeholder="medida en cm" rows="8"></input>
+            </div>
+            <div class="mb-3">
+                <label for="inputmessage">Comentario</label>
+                <textarea type="text" class="form-control mt-1" id="comentario" name="comentario"
+                    placeholder="medida en cm" rows="8"></textarea>
+            </div>
+            <div class="row">
+                <div class="col text-end mt-2">
+                    <button type="submit" class="btn btn-success btn-lg px-3">Guardar medida</button>
+                </div>
+            </div>
+            <!-- /. ROW  -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </form>
+    </div>
+</div>
+
+{% endblock %}

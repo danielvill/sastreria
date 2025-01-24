@@ -15,6 +15,8 @@ from routes.cliente import cliente
 from routes.producto import producto
 from routes.pedido import pedido
 from routes.h_pedido import h_pedido
+from routes.medida import medidas
+
 
 
 db = dbase()
@@ -70,9 +72,13 @@ def login():
         usuario = request.form['user']
         password = request.form['contraseña']
         usuario_fo = db.admin.find_one({'user':usuario,'contraseña':password})
+        cliente = db.cliente.find_one({'user':usuario,'contraseña':password})
         if usuario_fo:
             session["username"]= usuario
             return redirect(url_for('cliente.v_cli'))
+        elif cliente:
+            session["username"]= usuario
+            return redirect(url_for('medidas.admedi'))
         else:
             flash("Contraseña incorrecta")
             return redirect(url_for('login'))
@@ -94,7 +100,8 @@ app.register_blueprint(pedido)
 # Codigo de ingreso de historial de pedido
 app.register_blueprint(h_pedido)
 
-
+# Codigo de ingreso para el cliente 
+app.register_blueprint(medidas)
 
 @app.errorhandler(404)
 def notFound(error=None):
