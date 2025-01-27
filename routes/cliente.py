@@ -36,9 +36,14 @@ def adcli():
         contraseña = request.form['contraseña']
 
         exist_telefono = cliente.find_one({"telefono":telefono})
+        exist_contraseña = cliente.find_one({"contraseña":contraseña})
+
 
         if exist_telefono:
             flash("El número de teléfono ya está registrado" ,"alert")
+            return render_template('cliente/in_cliente.html')
+        elif exist_contraseña:
+            flash("La contraseña ya está registrada" ,"alert")
             return render_template('cliente/in_cliente.html')
         else:
             client = Cliente(id_cliente,user,apellido,telefono,correo,contraseña)

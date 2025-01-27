@@ -27,7 +27,10 @@
                     <input type="text" name="user" placeholder="Ingresa su usuario"><br />
                     <input type="password" name="contraseña" placeholder="Ingresa su contraseña"><br />
                     <button type="submit" style="background-color: #012045;">Entrar</button>
-                    <button type="reset" style="background-color: #734463;">Limpiar</button>
+                    <button type="submit" style="background-color: #734463;">
+                        <a href="/" style="color: white;">
+                            Regresar
+                        </a></button>
                     <br>
                     <br>
                     {% with messages = get_flashed_messages() %}

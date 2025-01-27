@@ -16,7 +16,7 @@ from routes.producto import producto
 from routes.pedido import pedido
 from routes.h_pedido import h_pedido
 from routes.medida import medidas
-
+from routes.carrito import carrito
 
 
 db = dbase()
@@ -67,17 +67,20 @@ def logout():
 #* Vista Ingreso de admin y usuarios
 @app.route('/login',methods=['GET','POST'])
 def login():
-
     if request.method == 'POST':
         usuario = request.form['user']
         password = request.form['contraseña']
         usuario_fo = db.admin.find_one({'user':usuario,'contraseña':password})
         cliente = db.cliente.find_one({'user':usuario,'contraseña':password})
         if usuario_fo:
-            session["username"]= usuario
+            session["username"] = usuario
+            session["id_cliente"] = usuario_fo['id_cliente']  # Guardar id_cliente en la sesión
+            print(f"admin id_cliente: {usuario_fo['id_cliente']}")
             return redirect(url_for('cliente.v_cli'))
         elif cliente:
-            session["username"]= usuario
+            session["username"] = cliente['user']
+            session["id_cliente"] = cliente['id_cliente']  # Guardar id_cliente en la sesión
+            print(f"cliente id_cliente: {cliente['id_cliente']}")
             return redirect(url_for('medidas.admedi'))
         else:
             flash("Contraseña incorrecta")
@@ -90,6 +93,10 @@ def login():
 
 # Codigo de ingreso de cliente
 app.register_blueprint(cliente)
+
+
+# Codigo de ingreso de cliente
+app.register_blueprint(carrito)
 
 # Codigo de ingreso de producto
 app.register_blueprint(producto)
