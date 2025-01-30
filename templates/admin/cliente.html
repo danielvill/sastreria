@@ -13,8 +13,8 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
+                    <th>Nombre de Usuario</th>
+                    <th>Nombre completo</th>
                     <th>Celular</th>
                     <th>Correo</th>
                     <th hidden>Contraseña</th>
@@ -28,7 +28,7 @@
                         {{cliente.id_cliente}}
                     </td>
                     <td>
-                        {{cliente.nombre}}
+                        {{cliente.user}}
                     </td>
 
                     <td>
@@ -77,11 +77,11 @@
                 <input type="text" id="id_cliente" name="id_cliente" class="form-control" readonly>
             </div>
             <div class="col">
-                <label for="">Nombre</label>
+                <label for="">Nombre de usuario</label>
                 <input type="text" id="nombre" name="nombre" class="form-control" >
             </div>
             <div class="col">
-                <label for="usuario">Apellido</label>
+                <label for="usuario">Nombre completo</label>
                 <input type="text" id="apellido" name="apellido" class="form-control">
             </div>
             <div class="col">

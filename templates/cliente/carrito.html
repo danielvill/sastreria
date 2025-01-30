@@ -1,5 +1,104 @@
 {% extends "cliente/layout.html" %}
 {% block content %}
+<style>
+    .cart-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .cart-table th,
+    .cart-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    .cart-table th {
+        background-color: #f2f2f2;
+        text-align: left;
+    }
+
+    .cart-table img {
+        width: 50px;
+        height: auto;
+    }
+
+    .coupon-section {
+        margin-top: 20px;
+    }
+
+    .coupon-section input[type="text"] {
+        padding: 5px;
+        width: 200px;
+    }
+
+    .coupon-section button {
+        padding: 5px 10px;
+    }
+
+    .cart-summary {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 830px;
+    }
+
+    .cart-summary h2 {
+        margin-top: 0;
+        font-size: 18px;
+        color: #333;
+    }
+
+    .cart-summary .item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .cart-summary .item span {
+        font-size: 16px;
+        color: #555;
+    }
+
+    .cart-summary .shipping {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .cart-summary .shipping span {
+        font-size: 16px;
+        color: #555;
+    }
+
+    .cart-summary .shipping a {
+        color: #a64ac9;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .cart-summary .total {
+        display: flex;
+        justify-content: space-between;
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .cart-summary .checkout-btn {
+        display: block;
+        width: 20%;
+        padding: 10px;
+        background-color: #333;
+        color: #fff;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+</style>
 <div class="container py-5">
     <div class="row py-5">
         <div class="col-md-9 m-auto">
@@ -10,7 +109,7 @@
             </div>
             {% endif %}
             {% endwith %}
-            <table class="table table-bordered table-hover  ">
+            <table class="cart-table">
                 <thead>
                     <tr>
                         <th hidden>Id cliente</th>
@@ -19,38 +118,121 @@
                         <th>Cantidad</th>
                         <th>Precio</th>
                         <th>Resultado</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for carrito in carrito %}
-                    <form action="">
-                    <tr>
-                        <td hidden>
-                            <input type="text" name="id_cliente" value="{{carrito.id_cliente}}">
-                            
-                        </td>
-                        <td hidden>
-                            <input type="text" name="id_producto" value="{{carrito.id_producto}}" readonly>
-                            
-                        </td>
-                        <td>
-                            <input type="text" name="producto" value="{{carrito.producto}}" readonly>
-                        </td>
-                        <td>
-                            <input type="text" name="cantidad" value="{{carrito.cantidad}}" readonly>
-                        </td>
-                        <td>
-                            <input type="text" name="precio" value="{{carrito.precio}}" readonly>
-                        </td>
-                        <td>
-                            <input type="text" name="resultado" value="{{carrito.resultado}}" readonly>
-                        </td>
-                    </tr>
-                    </form>
-                    {% endfor %}
+                    <form action="/cliente/carrito" method="post">
+                        <tr>
+                            <td hidden>
+                                {{carrito.id_cliente}}
+                                <input type="text" name="id_cliente" value="{{carrito.id_cliente}}">
+                            </td>
+                            <td hidden>
+                                <input type="text" name="id_producto" value="{{carrito.id_producto}}" readonly>
+
+                            </td>
+                            <td>
+                                {{carrito.producto}}
+                                <input hidden type="text" name="producto" value="{{carrito.producto}}" readonly>
+                            </td>
+                            <td>
+                                {{carrito.cantidad}}
+                                <input hidden type="text" class="cantidad" name="cantidad" value="{{carrito.cantidad}}"
+                                    readonly>
+                            </td>
+                            <td>
+                                {{carrito.precio}}
+                                <input hidden type="text" class="precio" name="precio" value="{{carrito.precio}}"
+                                    readonly>
+                            </td>
+                            <td>
+
+                                <input type="text" class="resultado" name="resultado" value="{{carrito.resultado}}"
+                                    readonly>
+                            </td>
+                            <td>
+                                <a href="{{url_for('carrito.delete_carr', eliacarr = carrito.id_producto)}}"
+                                    class="btn btn-danger ">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-x-octagon" viewBox="0 0 16 16">
+                                        <path
+                                            d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z" />
+                                        <path
+                                            d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+                                    </svg>
+                                </a>
+                            </td>
+                        </tr>
+
+                        {% endfor %}
                 </tbody>
+
             </table>
+            <div class="cart-summary">
+                <h2>Total del carrito</h2>
+                <div class="total">
+                    <span>Total</span>
+                    <span id="total"></span>
+                </div>
+                <button type="submit" class="checkout-btn">Finalizar compra</button>
+            </div>
+            </form>
+            <br>
+
         </div>
+
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function updateResults() {
+            let total = 0;
+            document.querySelectorAll('tbody tr').forEach(function (row) {
+                const cantidad = parseFloat(row.querySelector('.cantidad').value) || 0;
+                const precio = parseFloat(row.querySelector('.precio').value) || 0;
+                const resultado = cantidad * precio;
+                row.querySelector('.resultado').value = resultado.toFixed(2);
+                total += resultado;
+            });
+            document.getElementById('total').innerText = total.toFixed(2);
+        }
+
+        document.querySelectorAll('.eliminar').forEach(function (button) {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                const row = button.closest('tr');
+                row.remove();
+                updateResults();
+            });
+        });
+
+        updateResults();
+    });
+
+    // Validacion si los campos estan vacios
+    document.querySelector('form').onsubmit = function (e) {
+            var inputs = this.querySelectorAll('input');
+            var todosLlenos = true; // Asume que todos los campos están llenos
+
+            for (var i = 0; i < inputs.length; i++) {
+                if (inputs[i].value === '') {
+                    todosLlenos = false; // Si un campo está vacío, establece todosLlenos en falso
+                    break; // No necesitas verificar el resto de los campos, así que puedes salir del bucle
+                }
+            }
+
+            if (!todosLlenos) {
+                e.preventDefault(); // Previene el envío del formulario
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Campos estan vacios'
+                });
+            }
+        };
+
+</script>
 {% endblock %}

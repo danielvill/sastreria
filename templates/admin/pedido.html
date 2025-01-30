@@ -1,6 +1,78 @@
 {% extends "admin/layout.html" %}
 {% block content %}
+<style>
+    .card-header {
+        text-align: center;
+        background-color: #28a745;
+        color: white;
+        position: relative;
+    }
 
+    .btn-view-details {
+        margin-top: 10px;
+        color: white;
+        border-color: white;
+    }
 
-
+    .product-image {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            {% for pedido in pedidos %}
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        Pedido ID: {{ pedido.id_pedido }}<br>
+                        Cliente ID: {{ pedido.id_cliente }}
+                        <img src="/static/img/ticket.jpg" alt="Producto" class="img-fluid product-image" >
+                    </div>
+                    <div class="card-body text-center">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio</th>
+                                    <th>Resultado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for producto in pedido.productos %}
+                                <tr>
+                                    <td>{{ producto.producto }}</td>
+                                    <td class="cantidad">{{ producto.cantidad }}</td>
+                                    <td class="precio">{{ producto.precio }}</td>
+                                    <td class="resultado">{{ producto.resultado }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        function updateResults() {
+            let total = 0;
+            document.querySelectorAll('tbody tr').forEach(function (row) {
+                const cantidad = parseFloat(row.querySelector('.cantidad').value) || 0;
+                const precio = parseFloat(row.querySelector('.precio').value) || 0;
+                const resultado = cantidad * precio;
+                row.querySelector('.resultado').value = resultado.toFixed(2);
+                total += resultado;
+            });
+            document.getElementById('total').innerText = total.toFixed(2);
+        }
+    })
+    updateResults();
+</script>
 {% endblock %}

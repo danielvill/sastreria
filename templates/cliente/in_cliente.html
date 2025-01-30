@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Registro</title>
     <meta charset="utf-8">
@@ -11,7 +12,9 @@
     <link rel="stylesheet" href="/static/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/assets/css/templatemo.css">
     <link rel="stylesheet" href="/static/assets/css/custom.css">
-
+    <!-- SWEETALERT SCRIPTS -->
+    <script src="/static/assets/js/sweetalert211.js"></script>
+    
     <!-- Load fonts style after rendering the layout styles -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
@@ -43,23 +46,25 @@ https://templatemo.com/tm-559-zay-shop
     <div class="modal fade bg-white" id="templatemo_search" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
-            <div class="w-100 pt-1 mb-5 text-right">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form action="" method="get" class="modal-content modal-body border-0 p-0">
-                <div class="input-group mb-2">
-                    <input type="text" class="form-control" id="inputModalSearch" name="q" placeholder="Search ...">
-                    <button type="submit" class="input-group-text bg-success text-light">
-                        <i class="fa fa-fw fa-search text-white"></i>
-                    </button>
-                </div>
-            </form>
+
+           
         </div>
     </div>
     <!-- Start Contact -->
+
     <div class="container py-5">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
         <div class="row py-5">
-            <form class="col-md-9 m-auto" method="post" role="form">
+
+            <form class="col-md-9 m-auto" action="/cliente/in_cliente" method="post" role="form">
                 <div class="row">
                     <div class="form-group col-md-6 mb-3">
                         <label for="inputname">Nombre de usuario</label>
@@ -88,18 +93,11 @@ https://templatemo.com/tm-559-zay-shop
                 <div class="row">
                     <div class="col text-end mt-2">
                         <button type="submit" class="btn btn-success btn-lg px-3">Registrarme</button>
+                        <a href="/"  class="btn btn-secondary btn-lg px-3">Regresar</a>
                     </div>
                 </div>
                 <!-- /. ROW  -->
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">
-                    {{ message }}
-                </div>
-                {% endfor %}
-                {% endif %}
-                {% endwith %}
+
             </form>
         </div>
     </div>
@@ -108,6 +106,55 @@ https://templatemo.com/tm-559-zay-shop
 
     <!-- Start Footer -->
 
+    <script>
+        // Validacion si los campos estan vacios
+        document.querySelector('form').onsubmit = function (e) {
+            var inputs = this.querySelectorAll('input');
+            var todosLlenos = true; // Asume que todos los campos están llenos
+
+            for (var i = 0; i < inputs.length; i++) {
+                if (inputs[i].value === '') {
+                    todosLlenos = false; // Si un campo está vacío, establece todosLlenos en falso
+                    break; // No necesitas verificar el resto de los campos, así que puedes salir del bucle
+                }
+            }
+
+            if (!todosLlenos) {
+                e.preventDefault(); // Previene el envío del formulario
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Campos estan vacios'
+                });
+            }
+        };
+
+
+        // Validar Correo
+        function validarcorreo() {
+            let correo = document.getElementById('correo').value;
+            let regex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+            if (!regex.test(correo)) {
+                alert('Por favor, ingresa un correo válido');
+                return false;
+            }
+        }
+
+        // Validacion de numero telefonico
+        document.querySelector('form').addEventListener('submit', function (event) {
+            var telefono = document.querySelector('input[name="telefono"]').value;
+            var regex = /^09\d{8}$/; // Expresión regular para validar números de celular ecuatorianos
+
+            if (!regex.test(telefono)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'El celular esta incorrecto'
+                });
+                event.preventDefault(); // Evita que el formulario se envíe
+            }
+        });
+    </script>
     <!-- End Footer -->
 
     <!-- Start Script -->

@@ -31,3 +31,10 @@ def v_carri():
     return render_template("cliente/carrito.html", carrito=carrito)
 
 
+# Eliminar Pedido
+@carrito.route('/delete_carr/<string:eliacarr>')
+def delete_carr(eliacarr):
+    carrito = db["carrito"]
+    
+    carrito.delete_one({"id_producto":eliacarr}) 
+    return redirect(url_for('carrito.v_carri'))

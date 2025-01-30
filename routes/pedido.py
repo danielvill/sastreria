@@ -14,7 +14,7 @@ def get_next_sequence(name):
     seq = db.seqs.find_one({'_id': name})
     if seq is None:
         #  *Inicializa 'productoId' en 220 si no existe
-        db.seqs.insert_one({'_id': 'pedidoiId', 'seq': 0})
+        db.seqs.insert_one({'_id': 'pedidoId', 'seq': 0})
         seq = db.seqs.find_one({'_id': name})
 
     result = db.seqs.find_one_and_update(
@@ -24,18 +24,36 @@ def get_next_sequence(name):
     )
     return result.get('seq')
 
-@pedido.route("/cliente/carrito",methods=['GET', 'POST'])
+@pedido.route("/cliente/carrito", methods=['GET', 'POST'])
 def adpedido():
-    if 'username' not in session:
-        flash("Inicia sesion con tu usuario y contraseña")
-        return redirect(url_for('pedido.index'))
-   
-    # Agregar codigo ya que cambie lo que es la base de datos 
+    
+    if request.method == 'POST':
+        id_pedido = str(get_next_sequence('pedidoId')).zfill(1)
+        pedido = db["pedido"]
+        carrito = db["carrito"]
+        id_cliente = request.form['id_cliente']
+        id_producto_list = request.form.getlist('id_producto')
+        producto_list = request.form.getlist('producto')
+        cantidad_list = request.form.getlist('cantidad')
+        precio_list = request.form.getlist('precio')
+        resultado_list = request.form.getlist('resultado')
 
-    return render_template('cliente/carrito.html')
+        # Suponiendo que todos los lists son del mismo tamaño
+        for id_producto, producto, cantidad, precio, resultado in zip(id_producto_list, producto_list, cantidad_list, precio_list, resultado_list):
+            pedi = Pedido(id_pedido, id_cliente, id_producto, producto, cantidad, precio, resultado)
+            pedido.insert_one(pedi.PedidoDBCollection())
+        
+        # Eliminar todos los documentos en la colección carrito
+        carrito.delete_many({})
+
+        return redirect(url_for('pedido.gracias'))
+    else:
+        return render_template('cliente/carrito.html')
 
 
-# Visualizar pedido
+
+
+
 
 # * Vista de Shop 
 @pedido.route('/cliente/shop', methods=['GET', 'POST'])
@@ -72,4 +90,37 @@ def in_pedido(id_producto):
     return render_template('cliente/in_pedido.html', producto=producto,id_cliente=id_cliente)
 
 
+# Vista de admin pedido
+@pedido.route("/admin/pedido",methods=['GET',"POST"])
+def v_pedid():
+    if 'username' not in session:
+        flash("Inicia sesión con tu usuario y contraseña")
+        return redirect(url_for('pedido.index'))
+    
+    # Obtener todos los pedidos de la base de datos
+    pedidos = db["pedido"].find()
+
+    # Crear un diccionario para agrupar pedidos
+    pedidos_agrupados = {}
+    for pedido in pedidos:
+        id_pedido = pedido['id_pedido']
+        id_cliente = pedido['id_cliente']
+        if (id_pedido, id_cliente) not in pedidos_agrupados:
+            pedidos_agrupados[(id_pedido, id_cliente)] = {
+                'id_pedido': id_pedido,
+                'id_cliente': id_cliente,
+                'productos': []
+            }
+        pedidos_agrupados[(id_pedido, id_cliente)]['productos'].append(pedido)
+
+    # Convertir el diccionario en una lista para pasarlo al template
+    pedidos_agrupados_list = list(pedidos_agrupados.values())
+    
+    return render_template('admin/pedido.html', pedidos=pedidos_agrupados_list)
+
+
+# Vista cliente dando gracias
+@pedido.route("/cliente/gracias",methods=['GET'])
+def gracias():
+    return render_template('cliente/gracias.html')
 

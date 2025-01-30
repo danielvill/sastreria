@@ -3,157 +3,50 @@
 <div class="container py-5">
     <div class="row py-5">
         <div class="col-md-9 m-auto">
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            <div class="alert alert-danger">
-                {{ messages[0] }}
-            </div>
-            {% endif %}
-            {% endwith %}
-            <table class="table table-bordered table-hover  ">
-                <thead>
-                    <tr>
-                        <th>Id cliente</th>
-                        <th>Busto</th>
-                        <th>Cintura</th>
-                        <th>Cadera</th>
-                        <th>Espalda</th>
-                        <th>Mangas</th>
-                        <th>Comentario</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <form class="col-md-9 m-auto"   role="form">
+                <div class="row">
                     {% for medida in medidas %}
-                    <tr>
-                        <td>
-                            {{medida.id_cliente}}
-                        </td>
-                        <td>
-                            {{medida.busto}}
-                        </td>
-                        <td>
-                            {{medida.cintura}}
-                        </td>
-                        <td>
-                            {{medida.cadera}}
-                        </td>
-                        <td>
-                            {{medida.espalda}}
-                        </td>
-                        <td>
-                            {{medida.mangas}}
-                        </td>
-                        <td>
-                            {{medida.comentario}}
-                        </td>
-                        <td>
-                            <button type="submit" class="editar btn btn-primary" style="background-color: #59AB6E;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                    <path
-                                        d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                    <path fill-rule="evenodd"
-                                        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
-                                </svg>
-                            </button>
-                            </a>
-                        </td>
-                    </tr>
-                    </form>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    <div class="form-group col-md-6 mb-3" hidden>
+                        <label for="inputemail">Codigo de medida</label>
+                        <input type="text" class="form-control mt-1" value="{{medida.id_medida}}" placeholder="">
+                    </div>
+                    <div class="form-group col-md-6 mb-3" hidden>
+                        <label for="inputemail">Codigo cliente</label>
+                        <input type="text" class="form-control mt-1"  value="{{medida.id_cliente}}"
+                            placeholder="">
+                    </div>
+                    <div class=" mb-3">
+                        <label for="inputemail">Medida del busto</label>
+                        <input type="number" class="form-control mt-1" value="{{medida.busto}}" 
+                            rows="8">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="inputsubject">Medida de cintura</label>
+                    <input type="number" class="form-control mt-1" value="{{medida.cintura}}" >
+                </div>
+                <div class="mb-3">
+                    <label for="inputmessage">Medida de cadera</label>
+                    <input type="number" class="form-control mt-1" value="{{medida.cadera}}" placeholder=""
+                        rows="8"></input>
+                </div>
+                <div class="mb-3">
+                    <label for="inputmessage">Medida de espalda</label>
+                    <input type="number" class="form-control mt-1" value="{{medida.espalda}}" placeholder=""
+                        rows="8"></input>
+                </div>
+                <div class="mb-3">
+                    <label for="inputmessage">Medida en mangas</label>
+                    <input type="number" class="form-control mt-1" value="{{medida.mangas}}" placeholder=""
+                        rows="8"></input>
+                </div>
+                <div class="mb-3">
+                    <label for="inputmessage">Comentario</label>
+                    <input type="text" class="form-control mt-1" value="{{ medida.comentario}}" rows="8"></input>
+                </div>
+                {% endfor %}
+            </form>
         </div>
     </div>
 </div>
-
-
-
-<div id="editModal" title="Editar Medidas">
-    <form id="editForm" action="" method="post">
-        <div class="form-group">
-            <div class="col" hidden>
-                <label for="">id_cliente</label>
-                <input type="text" id="id_cliente" name="id_cliente" class="form-control" readonly>
-            </div>
-            <div class="col">
-                <label for="">Busto</label>
-                <input type="text" id="busto" name="busto" class="form-control" readonly>
-            </div>
-            <div class="col">
-                <label for="usuario">Cintura</label>
-                <input type="text" id="cintura" name="cintura" class="form-control">
-            </div>
-            <div class="col">
-                <label for="rol">Cadera</label>
-                <input type="text" id="cadera" name="cadera" class="form-control">
-            </div>
-            <div class="col">
-                <label for="rol">Espalda</label>
-                <input type="text" id="espalda" name="espalda" class="form-control">
-            </div>
-            <div class="col">
-                <label for="rol">Mangas</label>
-                <input type="file" id="mangas" name="mangas" class="form-control">
-            </div>
-            <div class="col">
-                <label for="rol">Comentario</label>
-                <input type="text" id="comentario" name="comentario" class="form-control">
-            </div>
-        </div>
-    </form>
-</div>
-<script>
-    $(document).ready(function () {
-        $('#myTable').DataTable({
-            "language": {
-                "url": "/static/interfaz/js/Spanish.json"
-            }
-        });
-        var table = $('#myTable').DataTable();
-        //Cambio de english a spanish
-        // Funcionalidad de edición
-        table.on('click', '.editar', function () {
-            var row = $(this).closest('tr');
-            var data = table.row(row).data();
-            // Aquí puedes abrir el modal y llenar los campos del formulario con los datos del usuario
-            // Por ejemplo:
-            $('#id_cliente').val(data[0]);
-            $('#busto').val(data[1]);
-            $('#cintura').val(data[2]);
-            $('#cadera').val(data[3]);
-            $('#espalda').val(data[4]);
-            $('#mangas').val(data[5]);
-            $('#comentario').val(data[6]);
-            $('#editForm').attr('action', '/edit_medi/' + data[0]); // Recuerda que en esta parte el 0 es la posicion selectora del codigo que estas usando en este caso es 0 ya que usas la cedula
-            $('#editModal').dialog('open');
-        });
-        // Inicializar el modal
-        $('#editModal').dialog({
-            autoOpen: false,
-            modal: true,
-            buttons: [
-                {
-                    text: 'Guardar',
-                    click: function () {
-                        $('#editForm').submit();
-                    },
-                    // Agregar una clase al botón
-                    class: 'guardar'
-                },
-                {
-                    text: 'Cancelar',
-                    click: function () {
-                        $(this).dialog('close');
-                    },
-                    // Agregar una clase al botón
-                    class: 'cancelar'
-                }
-            ]
-        });
-    });
-    
-</script>
-
 {% endblock %}

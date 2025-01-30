@@ -74,8 +74,6 @@ def login():
         cliente = db.cliente.find_one({'user':usuario,'contraseña':password})
         if usuario_fo:
             session["username"] = usuario
-            session["id_cliente"] = usuario_fo['id_cliente']  # Guardar id_cliente en la sesión
-            print(f"admin id_cliente: {usuario_fo['id_cliente']}")
             return redirect(url_for('cliente.v_cli'))
         elif cliente:
             session["username"] = cliente['user']

@@ -1,0 +1,183 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert alert-danger">
+            {{ messages[0] }}
+        </div>
+        {% endif %}
+        {% endwith %}
+        <table  class="table table-bordered table-hover" id="myTable">
+            <thead>
+                <tr>
+                    <th hidden>Codigo medida</th>
+                    <th>Codigo Cliente</th>
+                    <th>Busto</th>
+                    <th>Cintura</th>
+                    <th>Cadera</th>
+                    <th >Espalda</th>
+                    <th>Mangas</th>
+                    <th>Comentario</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for medidas in medidas %}
+                <tr>
+                    <td hidden>
+                        {{medidas.id_medida}}
+                    </td>
+                    <td>
+                        {{medidas.id_cliente}}
+                    </td>
+
+                    <td>
+                        {{medidas.busto}}
+                    </td>
+                    <td>
+                        {{medidas.cintura}}
+                    </td>
+                    <td>
+                        {{medidas.cadera}}
+                    </td>
+                    <td >
+                        {{medidas.espalda}}
+                    </td>
+                    <td >
+                        {{medidas.mangas}}
+                    </td>
+                    <td >
+                        {{medidas.comentario}}
+                    </td>
+                    <td>
+                        <button type="submit" class="editar btn btn-primary" style="background-color: #59AB6E;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                            </svg>
+                        </button>
+                        
+                    </td>
+                </tr>
+                </form>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="editModal" title="Editar Medida">
+    <form id="editForm" action="" method="post">
+        <div class="form-group">
+            <div class="col"  hidden  >
+                <label for=""  >Codigo medida</label>
+                <input type="number" id="id_medida" name="id_medida" class="form-control" readonly>
+            </div>
+            <div class="col" hidden >
+                <label for="">Codigo cliente</label>
+                <input type="number" id="id_cliente" name="id_cliente" class="form-control" >
+            </div>
+            <div class="col">
+                <label for="usuario">Medida Busto</label>
+                <input type="number" id="busto" name="busto" class="form-control">
+            </div>
+            <div class="col">
+                <label for="rol">Medida Cintura</label>
+                <input type="number" id="cintura" name="cintura" class="form-control">
+            </div>
+            <div class="col">
+                <label for="rol">Medida Cadera</label>
+                <input type="number" id="cadera" name="cadera" class="form-control">
+            </div>
+            <div class="col" >
+                <label for="rol">Medida Espalda</label>
+                <input type="number" id="espalda" name="espalda" class="form-control">
+            </div>
+            <div class="col" >
+                <label for="rol">Medida Mangas</label>
+                <input type="number" id="mangas" name="mangas" class="form-control">
+            </div>
+            <div class="col"  >
+                <label for="rol"  >Comentarios</label>
+                <input type="text" id="comentario" name="comentario" class="form-control">
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function () {
+    $('#myTable').DataTable({
+        "language": {
+            "url": "/static/interfaz/js/Spanish.json"
+        }
+    });
+    var table = $('#myTable').DataTable();
+    //Cambio de english a spanish
+    // Funcionalidad de edición
+    table.on('click', '.editar', function () {
+        var row = $(this).closest('tr');
+        var data = table.row(row).data();
+        // Aquí puedes abrir el modal y llenar los campos del formulario con los datos del usuario
+        // Por ejemplo:
+        $('#id_medida').val(data[0]);
+        $('#id_cliente').val(data[1]);
+        $('#busto').val(data[2]);
+        $('#cintura').val(data[3]);
+        $('#cadera').val(data[4]);
+        $('#espalda').val(data[5]);
+        $('#mangas').val(data[6]);
+        $('#comentario').val(data[7]);
+        $('#editForm').attr('action','/edit_medi/'+ data[0]); // Recuerda que en esta parte el 0 es la posicion selectora del codigo que estas usando en este caso es 0 ya que usas la cedula
+        $('#editModal').dialog('open');
+    });
+    // Inicializar el modal
+    $('#editModal').dialog({
+        autoOpen: false,
+        modal: true,
+        buttons: [
+            {
+                text: 'Guardar',
+                click: function () {
+                    $('#editForm').submit();
+                },
+                // Agregar una clase al botón
+                class: 'guardar'
+            },
+            {
+                text: 'Cancelar',
+                click: function () {
+                    $(this).dialog('close');
+                },
+                // Agregar una clase al botón
+                class: 'cancelar'
+            }
+        ]
+    });
+});
+
+
+$(".eliminar").click(function (event) {
+    event.preventDefault();
+    var url = $(this).attr('href'); // Guarda la URL del enlace
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "¿Estás seguro de que quieres eliminar?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminar!',
+        cancelButtonText: 'No, cancelar!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = url; // Navega a la URL del enlace
+        }
+    });
+});
+</script>
+
+
+{% endblock %}
