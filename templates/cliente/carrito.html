@@ -109,6 +109,31 @@
             </div>
             {% endif %}
             {% endwith %}
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Ten presente lo siguiente
+            </button>
+<br>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Recuerda</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Recuerda agregar en el carrito el tipo de tela que deseas para tu ropa  
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<br>
             <table class="cart-table">
                 <thead>
                     <tr>
@@ -214,25 +239,25 @@
 
     // Validacion si los campos estan vacios
     document.querySelector('form').onsubmit = function (e) {
-            var inputs = this.querySelectorAll('input');
-            var todosLlenos = true; // Asume que todos los campos están llenos
+        var inputs = this.querySelectorAll('input');
+        var todosLlenos = true; // Asume que todos los campos están llenos
 
-            for (var i = 0; i < inputs.length; i++) {
-                if (inputs[i].value === '') {
-                    todosLlenos = false; // Si un campo está vacío, establece todosLlenos en falso
-                    break; // No necesitas verificar el resto de los campos, así que puedes salir del bucle
-                }
+        for (var i = 0; i < inputs.length; i++) {
+            if (inputs[i].value === '') {
+                todosLlenos = false; // Si un campo está vacío, establece todosLlenos en falso
+                break; // No necesitas verificar el resto de los campos, así que puedes salir del bucle
             }
+        }
 
-            if (!todosLlenos) {
-                e.preventDefault(); // Previene el envío del formulario
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Campos estan vacios'
-                });
-            }
-        };
+        if (!todosLlenos) {
+            e.preventDefault(); // Previene el envío del formulario
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Campos estan vacios'
+            });
+        }
+    };
 
 </script>
 {% endblock %}
