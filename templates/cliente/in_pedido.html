@@ -80,6 +80,7 @@ https://templatemo.com/tm-559-zay-shop
                         <li class="nav-item">
                             <a class="nav-link" href="/cliente/shop">Comprar producto</a>
                         </li>
+                        
                     </ul>
                 </div>
                 <div class="navbar align-self-center d-flex">
@@ -91,19 +92,16 @@ https://templatemo.com/tm-559-zay-shop
                             </div>
                         </div>
                     </div>
-                    <a class="nav-icon d-none d-lg-inline" href="#" data-bs-toggle="modal"
-                        data-bs-target="#templatemo_search">
-                        <i class="fa fa-fw fa-search text-dark mr-2"></i>
-                    </a>
+                    
                     <a class="nav-icon position-relative text-decoration-none" href="#">
                         <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
                         <span
                             class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">7</span>
                     </a>
-                    <a class="nav-icon position-relative text-decoration-none" href="#">
+                    <a class="nav-icon position-relative text-decoration-none" href="{{ url_for('logout') }}">
                         <i class="fa fa-fw fa-user text-dark mr-3"></i>
                         <span
-                            class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">+99</span>
+                            class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark"></span>
                     </a>
                 </div>
             </div>
@@ -150,6 +148,14 @@ https://templatemo.com/tm-559-zay-shop
                         <div class="card-body">
                             <h1 class="h2">{{ producto['nombre'] }}</h1>
                             <p class="h3 py-2">${{ producto['precio'] }}</p>
+                            <p class="py-2">
+                                <i class="fa fa-star text-warning"></i>
+                                <i class="fa fa-star text-warning"></i>
+                                <i class="fa fa-star text-warning"></i>
+                                <i class="fa fa-star text-warning"></i>
+                                <i class="fa fa-star text-secondary"></i>
+                                <span class="list-inline-item text-dark">Calificación de este producto</span>
+                            </p>
                             <h6>Description:</h6>
                             <p>{{ producto['descripcion'] }}</p>
                             <br>
@@ -205,27 +211,30 @@ https://templatemo.com/tm-559-zay-shop
     <section class="py-5">
         <div class="container">
             <div class="row text-left p-2 pb-3">
-                <h4>Imágenes de Productos</h4>
+                <h4>Productos Relacionados</h4>
             </div>
             <!-- Empieza el contenedor de las imágenes -->
             <div class="row">
-                {% for producto in productos %}
+                {% for producto in productos_relacionados %}
                 <div class="col-md-4">
                     <div class="product-wap card rounded-0">
                         <div class="card rounded-0">
-                            <img class="card-img rounded-0 img-fluid" src="{{ producto.imagen }}"
+                            <img class="card-img rounded-0 img-fluid" src="{{ url_for('static', filename='img/producto/' + producto['imagen']) }}"
                                 alt="{{ producto.nombre }}">
                             <div
                                 class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
                                 <ul class="list-unstyled">
-                                    <li><a class="btn btn-success text-white mt-2"
-                                            href="{{ url_for('in_pedido', id_producto=str(producto._id)) }}"><i
-                                                class="far fa-eye"></i></a></li>
+                                    <li>
+                                        <a class="btn btn-success text-white mt-2"
+                                            href="{{ url_for('pedido.in_pedido', id_producto=str(producto._id)) }}">
+                                            <i class="far fa-eye"></i>
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
                         <div class="card-body">
-                            <a href="{{ url_for('in_pedido', id_producto=str(producto._id)) }}"
+                            <a href="{{ url_for('pedido.in_pedido', id_producto=str(producto._id)) }}"
                                 class="h3 text-decoration-none">{{ producto.nombre }}</a>
                             <p class="text-center mb-0">${{ producto.precio }}</p>
                         </div>

@@ -36,24 +36,35 @@ def about():
     return render_template('about.html')
 
 # * Vista de Shop 
+# Esta parte su quieres retroceder 
 @app.route('/shop', methods=['GET', 'POST'])
 def shop():
     page = int(request.args.get('page', 1))
+    categoria = request.args.get('categoria', None)
+    subcategoria = request.args.get('subcategoria', None)
+    
     productos_per_page = 10
-    productos = list(db["producto"].find().skip((page-1)*productos_per_page).limit(productos_per_page))
-    total_productos = db["producto"].count_documents({})
+    query = {}
+    
+    if categoria:
+        query['categoria'] = categoria
+    if subcategoria:
+        query['subcategoria'] = subcategoria
+    
+    productos = list(db["producto"].find(query).skip((page-1)*productos_per_page).limit(productos_per_page))
+    total_productos = db["producto"].count_documents(query)
     total_pages = (total_productos + productos_per_page - 1) // productos_per_page
     
     categorias = {}
     for producto in db["producto"].find():
-        categoria = producto['categoria']
-        subcategoria = producto['subcategoria']
-        if categoria not in categorias:
-            categorias[categoria] = []
-        if subcategoria not in categorias[categoria]:
-            categorias[categoria].append(subcategoria)
+        cat = producto['categoria']
+        subcat = producto['subcategoria']
+        if cat not in categorias:
+            categorias[cat] = []
+        if subcat not in categorias[cat]:
+            categorias[cat].append(subcat)
     
-    return render_template('shop.html', productos=productos, categorias=categorias, total_pages=total_pages, current_page=page)
+    return render_template('shop.html', productos=productos, categorias=categorias, total_pages=total_pages, current_page=page, selected_categoria=categoria, selected_subcategoria=subcategoria)
 
 
 #* Este es para cerrar la sesion 

@@ -1,0 +1,96 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <h1>Historial de Pedidos</h1>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID Pedido</th>
+                    <th>ID Cliente</th>
+                    <th>Fecha de Entrega</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pedido in h_pedido %}
+                <tr>
+                    <td>{{ pedido.id_pedido }}</td>
+                    <td>{{ pedido.id_cliente }}</td>
+                    <td hidden>
+                        {% if pedido.resultado %}
+                        {{ pedido.resultado }}
+                        {% else %}
+                        <input type="text" hidden class="form-control resultado" data-id="{{ pedido._id }}"
+                            placeholder="Ingrese resultado">
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if pedido.fecha_entrega %}
+                        {{ pedido.fecha_entrega }}
+                        {% else %}
+                        <input type="date" class="form-control fecha_entrega" data-id="{{ pedido._id }}">
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if pedido.estado %}
+                        {{ pedido.estado }}
+                        {% else %}
+                        <input type="text" class="form-control estado" data-id="{{ pedido._id }}"
+                            placeholder="Ingrese estado">
+                        {% endif %}
+                    </td>
+                    <td>
+                        <button class="btn btn-primary btn-actualizar" data-id-pedido="{{ pedido.id_pedido }}">Actualizar</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Agregar un evento a los botones "Actualizar"
+    document.querySelectorAll('.btn-actualizar').forEach(button => {
+        button.addEventListener('click', function () {
+            // Obtener el id_pedido del botón
+            const idPedido = this.getAttribute('data-id-pedido');
+
+            // Obtener los valores de los inputs
+            const row = this.closest('tr');
+            const resultado = row.querySelector('.resultado')?.value || null;
+            const fechaEntrega = row.querySelector('.fecha_entrega')?.value || null;
+            const estado = row.querySelector('.estado')?.value || null;
+
+            // Enviar los datos al backend
+            fetch('/admin/h_pedido/actualizar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id_pedido: parseInt(idPedido), // Convertir a int
+                    resultado: resultado,
+                    fecha_entrega: fechaEntrega,
+                    estado: estado
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Pedido actualizado correctamente');
+                    location.reload(); // Recargar la página para ver los cambios
+                } else {
+                    alert('Error al actualizar el pedido');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -59,35 +59,73 @@ def adpedido():
 @pedido.route('/cliente/shop', methods=['GET', 'POST'])
 def shop():
     page = int(request.args.get('page', 1))
+    categoria = request.args.get('categoria', None)
+    subcategoria = request.args.get('subcategoria', None)
+    
     productos_per_page = 10
-    productos = list(db["producto"].find().skip((page-1)*productos_per_page).limit(productos_per_page))
-    total_productos = db["producto"].count_documents({})
+    query = {}
+    
+    if categoria:
+        query['categoria'] = categoria
+    if subcategoria:
+        query['subcategoria'] = subcategoria
+    
+    productos = list(db["producto"].find(query).skip((page-1)*productos_per_page).limit(productos_per_page))
+    total_productos = db["producto"].count_documents(query)
     total_pages = (total_productos + productos_per_page - 1) // productos_per_page
     
     categorias = {}
     for producto in db["producto"].find():
-        categoria = producto['categoria']
-        subcategoria = producto['subcategoria']
-        if categoria not in categorias:
-            categorias[categoria] = []
-        if subcategoria not in categorias[categoria]:
-            categorias[categoria].append(subcategoria)
+        cat = producto['categoria']
+        subcat = producto['subcategoria']
+        if cat not in categorias:
+            categorias[cat] = []
+        if subcat not in categorias[cat]:
+            categorias[cat].append(subcat)
     
-    return render_template('cliente/shop.html', productos=productos, categorias=categorias, total_pages=total_pages, current_page=page)
+    return render_template('/cliente/shop.html', productos=productos, categorias=categorias, total_pages=total_pages, current_page=page, selected_categoria=categoria, selected_subcategoria=subcategoria)
 
 
 # Es necesario tener un id para lo que es para este producto
+# Esta es la parte donde se puede seleccionar para lo que es productos
 @pedido.route('/in_pedido/<id_producto>', methods=['GET'])
 def in_pedido(id_producto):
     try:
+        print(f"Recibido id_producto: {id_producto}")
         producto_id = ObjectId(id_producto)
     except InvalidId:
+        print("El ID del producto no es válido")
         return "El ID del producto no es válido", 400
+
+    # Obtener el producto seleccionado
     producto = db["producto"].find_one({"_id": producto_id})
     if not producto:
+        print("Producto no encontrado")
         return "Producto no encontrado", 404
+
+    
+    # Obtener productos relacionados (misma categoría y subcategoría)
+    categoria = producto.get('categoria')
+    subcategoria = producto.get('subcategoria')
+
+    query = {
+        "categoria": categoria,
+        "subcategoria": subcategoria,
+        "_id": {"$ne": producto_id}  # Excluir el producto actual
+    }
+    
+    productos_relacionados = list(db["producto"].find(query).limit(4))  # Limitar a 4 productos relacionados, por ejemplo
+
+    
     id_cliente = session.get('id_cliente')
-    return render_template('cliente/in_pedido.html', producto=producto,id_cliente=id_cliente)
+    
+    return render_template(
+        'cliente/in_pedido.html',
+        producto=producto,
+        productos_relacionados=productos_relacionados,
+        id_cliente=id_cliente,
+        str=str  # Pasar la función str al contexto de la plantilla
+    )
 
 
 # Vista de admin pedido

@@ -81,6 +81,10 @@ https://templatemo.com/tm-559-zay-shop
                         <li class="nav-item">
                             <a class="nav-link" href="./shop">Comprar producto</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="./carrito">Carrito</a>
+                        </li>
+                        
 
                     </ul>
                 </div>
@@ -94,7 +98,7 @@ https://templatemo.com/tm-559-zay-shop
                         </div>
                     </div>
 
-                    <a class="nav-icon position-relative text-decoration-none" href="#">
+                    <a class="nav-icon position-relative text-decoration-none" href="{{ url_for('logout') }}">
                         <i class="fa fa-fw fa-user text-dark mr-3"></i>
                         <span
                             class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark"></span>
@@ -135,15 +139,15 @@ https://templatemo.com/tm-559-zay-shop
             <div class="col-lg-3">
                 <h1 class="h2 pb-4">Categories</h1>
                 <ul class="list-unstyled templatemo-accordion">
-                    {% for categoria in categorias %}
+                    {% for cat in categorias %}
                     <li class="pb-3">
-                        <a class="collapsed d-flex justify-content-between h3 text-decoration-none" href="#">
-                            {{ categoria }}
+                        <a class="collapsed d-flex justify-content-between h3 text-decoration-none" href="{{ url_for('pedido.shop', categoria=cat) }}">
+                            {{ cat }}
                             <i class="fa fa-fw fa-chevron-circle-down mt-1"></i>
                         </a>
                         <ul class="collapse show list-unstyled pl-3">
-                            {% for subcategoria in categorias[categoria] %}
-                            <li><a class="text-decoration-none" href="#">{{ subcategoria }}</a></li>
+                            {% for subcat in categorias[cat] %}
+                            <li><a class="text-decoration-none" href="{{ url_for('pedido.shop', categoria=cat, subcategoria=subcat) }}">{{ subcat }}</a></li>
                             {% endfor %}
                         </ul>
                     </li>
@@ -192,8 +196,7 @@ https://templatemo.com/tm-559-zay-shop
                                 <div
                                     class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
                                     <ul class="list-unstyled">
-                                        <li><a class="btn btn-success text-white" href=""><i
-                                                    class="far fa-heart"></i></a></li>
+                                        
                                         <li><a class="btn btn-success text-white mt-2"
                                                 href="{{ url_for('pedido.in_pedido', id_producto=producto['_id']) }}"><i
                                                     class="far fa-eye"></i></a></li>
@@ -208,6 +211,15 @@ https://templatemo.com/tm-559-zay-shop
                                 <ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
                                     <li>{{ producto['descripcion'] }}</li>
                                 </ul>
+                                <ul class="list-unstyled d-flex justify-content-center mb-1">
+                                    <li>
+                                        <i class="text-warning fa fa-star"></i>
+                                        <i class="text-warning fa fa-star"></i>
+                                        <i class="text-warning fa fa-star"></i>
+                                        <i class="text-muted fa fa-star"></i>
+                                        <i class="text-muted fa fa-star"></i>
+                                    </li>
+                                </ul>
                                 <p class="text-center mb-0">${{ producto['precio'] }}</p>
                             </div>
                         </div>
@@ -221,7 +233,9 @@ https://templatemo.com/tm-559-zay-shop
                         {% for page_num in range(1, total_pages + 1) %}
                         <li class="page-item {% if page_num == current_page %} active {% endif %}">
                             <a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark"
-                                href="{{ url_for('shop', page=page_num) }}">{{ page_num }}</a>
+                                href="{{ url_for('pedido.shop', page=page_num, categoria=selected_categoria, subcategoria=selected_subcategoria) }}">
+                                {{ page_num }}
+                            </a>
                         </li>
                         {% endfor %}
                     </ul>
