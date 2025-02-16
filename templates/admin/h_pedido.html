@@ -1,14 +1,14 @@
 {% extends "admin/layout.html" %}
 {% block content %}
-
 <div class="container">
     <div class="row">
         <h1>Historial de Pedidos</h1>
-        <table class="table table-bordered">
+        <table class="table table-bordered" id="myTable">
             <thead>
                 <tr>
                     <th>ID Pedido</th>
                     <th>ID Cliente</th>
+                    <th hidden>Resultado</th>
                     <th>Fecha de Entrega</th>
                     <th>Estado</th>
                     <th>Acciones</th>
@@ -43,7 +43,15 @@
                         {% endif %}
                     </td>
                     <td>
-                        <button class="btn btn-primary btn-actualizar" data-id-pedido="{{ pedido.id_pedido }}">Actualizar</button>
+                        <button class="btn btn-primary btn-actualizar"
+                            data-id-pedido="{{ pedido.id_pedido }}" style="background-color: #59AB6E;">Actualizar</button>
+                        <a style="background-color: #59AB6E;" class="btn btn-primary" href="{{ url_for('h_pedido.v_ped', id=pedido.id_cliente) }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+                                <path
+                                    d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
+                            </svg>
                     </td>
                 </tr>
                 {% endfor %}
@@ -51,19 +59,30 @@
         </table>
     </div>
 </div>
-
 <script>
     // Agregar un evento a los botones "Actualizar"
     document.querySelectorAll('.btn-actualizar').forEach(button => {
         button.addEventListener('click', function () {
             // Obtener el id_pedido del botón
-            const idPedido = this.getAttribute('data-id-pedido');
+            const idPedido = parseInt(this.getAttribute('data-id-pedido'));
 
             // Obtener los valores de los inputs
             const row = this.closest('tr');
             const resultado = row.querySelector('.resultado')?.value || null;
             const fechaEntrega = row.querySelector('.fecha_entrega')?.value || null;
             const estado = row.querySelector('.estado')?.value || null;
+
+            // Validar que los datos sean correctos
+            if (!idPedido) {
+                alert('ID Pedido es requerido');
+                return;
+            }
+
+            const idCliente = row.querySelector('td:nth-child(2)').innerText.trim();
+            if (!idCliente) {
+                alert('ID Cliente es requerido');
+                return;
+            }
 
             // Enviar los datos al backend
             fetch('/admin/h_pedido/actualizar', {
@@ -72,25 +91,36 @@
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    id_pedido: parseInt(idPedido), // Convertir a int
+                    id_pedido: idPedido,
+                    id_cliente: idCliente,
                     resultado: resultado,
                     fecha_entrega: fechaEntrega,
                     estado: estado
                 })
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('Pedido actualizado correctamente');
-                    location.reload(); // Recargar la página para ver los cambios
-                } else {
-                    alert('Error al actualizar el pedido');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Pedido actualizado correctamente');
+                        location.reload(); // Recargar la página para ver los cambios
+                    } else {
+                        alert('Error al actualizar el pedido: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         });
     });
+</script>
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable({
+            "language": {
+                "url": "/static/interfaz/js/Spanish.json"
+            }
+        });
+        var table = $('#myTable').DataTable();
+    })
 </script>
 {% endblock %}

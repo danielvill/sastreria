@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
@@ -35,7 +36,14 @@
     <script src="/static/interfaz/js/custom.js"></script>
     <script src="/static/interfaz/js/sweetalert211.js"></script>
     <script src="/static/interfaz/js/timemensaje.js"></script>
+    <!-- DataTables Select CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.3/css/select.dataTables.min.css">
+    <!-- DataTables Editor CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/editor/2.0.6/css/editor.dataTables.min.css">
+
+
 </head>
+
 <body>
     <div class="navbar navbar-inverse set-radius-zero">
         <div class="container">
@@ -46,11 +54,12 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="./home">
-                    <img src="/static/interfaz/img/logo.png"  style="width: 300px;"/>
+                    <img src="/static/interfaz/img/logo.png" style="width: 300px;" />
                 </a>
             </div>
             <div class="right-div">
-                <a href="{{ url_for('logout') }}" class="btn btn-primary pull-right" style="background-color: #59AB6E;">Salir</a>
+                <a href="{{ url_for('logout') }}" class="btn btn-primary pull-right"
+                    style="background-color: #59AB6E;">Salir</a>
             </div>
         </div>
     </div>
@@ -61,12 +70,13 @@
                 <div class="col-md-12">
                     <div class="navbar-collapse collapse ">
                         <ul id="menu-top" class="nav navbar-nav navbar-right">
-                            <li><a href="./home">Pagina de Inicio</a></li>
+                           
                             <li>
                                 <a href="#" class="dropdown-toggle" id="ddlmenuItem" data-toggle="dropdown">Cliente
                                     <i class="fa fa-angle-down"></i></a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="ddlmenuItem">
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="./cliente">Visualizar Usuarios</a>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="./cliente">Visualizar
+                                            Usuarios</a>
                                     </li>
                                 </ul>
                             </li>
@@ -74,8 +84,10 @@
                                 <a href="#" class="dropdown-toggle" id="ddlmenuItem" data-toggle="dropdown">Productos
                                     <i class="fa fa-angle-down"></i></a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="ddlmenuItem">
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="./in_producto">Ingresar Productos</a></li>
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="./producto">Visualizar Productos</a>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                            href="./in_producto">Ingresar Productos</a></li>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1"
+                                            href="./producto">Visualizar Productos</a>
                                     </li>
                                 </ul>
                             </li>
@@ -83,7 +95,8 @@
                                 <a href="#" class="dropdown-toggle" id="ddlmenuItem" data-toggle="dropdown">Medida
                                     <i class="fa fa-angle-down"></i></a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="ddlmenuItem">
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="./medida">Visualizar Medida</a>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="./medida">Visualizar
+                                            Medida</a>
                                     </li>
                                 </ul>
                             </li>
@@ -91,12 +104,14 @@
                                 <a href="#" class="dropdown-toggle" id="ddlmenuItem" data-toggle="dropdown">Pedidos
                                     <i class="fa fa-angle-down"></i></a>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="ddlmenuItem">
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="./pedido">Pedidos en Espera</a>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="./pedido">Pedidos en
+                                            Espera</a>
                                     </li>
-                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="./h_pedido">Registrar Pedidos</a>
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="./h_pedido">Registrar
+                                            Pedidos</a>
                                     </li>
                                 </ul>
-                                    
+
                             </li>
                         </ul>
                     </div>
@@ -114,8 +129,17 @@
             </div>
             {% block content %}
 
-            {% endblock %}            
-        </div>  
-    </div>       
+            {% endblock %}
+        </div>
+    </div>
+
+    <!-- DataTables Select JS -->
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
+    <!-- DataTables Editor JS -->
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/editor/2.0.6/js/dataTables.editor.min.js"></script>
+
 </body>
+
 </html>

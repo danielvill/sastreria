@@ -3,7 +3,7 @@
 <div class="container py-5">
     <div class="row py-5">
         <div class="col-md-9 m-auto">
-            <form class="col-md-9 m-auto"   role="form">
+            <form class="col-md-9 m-auto" role="form">
                 <div class="row">
                     {% for medida in medidas %}
                     <div class="form-group col-md-6 mb-3" hidden>
@@ -12,43 +12,70 @@
                     </div>
                     <div class="form-group col-md-6 mb-3" hidden>
                         <label for="inputemail">Codigo cliente</label>
-                        <input type="text" class="form-control mt-1"  value="{{medida.id_cliente}}"
-                            placeholder="">
+                        <input type="text" class="form-control mt-1" value="{{medida.id_cliente}}" placeholder="">
                     </div>
                     <div class=" mb-3">
                         <label for="inputemail">Medida del busto</label>
-                        <input type="number" class="form-control mt-1" value="{{medida.busto}}" 
-                            rows="8">
+                        <input type="number" class="form-control mt-1" value="{{medida.busto}}" rows="8">
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label for="inputsubject">Medida de cintura</label>
-                    <input type="number" class="form-control mt-1" value="{{medida.cintura}}" >
+                    <label for="inputemail">Medida de busto:</label>
+                    <input type="text" class="form-control mt-1" id="busto" name="busto" value="{{medida.busto}}">
                 </div>
                 <div class="mb-3">
-                    <label for="inputmessage">Medida de cadera</label>
-                    <input type="number" class="form-control mt-1" value="{{medida.cadera}}" placeholder=""
-                        rows="8"></input>
+                    <label for="importante">Medida de ante brazo</label>
+                    <input id="a_brazo" class="form-control mt-1" name="a_brazo" value="{{medida.a_brazo}}"></input>
                 </div>
                 <div class="mb-3">
-                    <label for="inputmessage">Medida de espalda</label>
-                    <input type="number" class="form-control mt-1" value="{{medida.espalda}}" placeholder=""
-                        rows="8"></input>
+                    <label for="nuevo">Medida de largo de brazo</label>
+                    <input id="l_brazo" class="form-control mt-1" name="l_brazo" value="{{medida.l_brazo}}"></input>
                 </div>
                 <div class="mb-3">
-                    <label for="inputmessage">Medida en mangas</label>
-                    <input type="number" class="form-control mt-1" value="{{medida.mangas}}" placeholder=""
-                        rows="8"></input>
+                    <label for="ayuda">Medida de ancho de puño</label>
+                    <input id="a_puño" class="form-control mt-1" name="a_puño" value="{{medida.a_puño}}"></input>
                 </div>
                 <div class="mb-3">
-                    <label for="inputmessage">Comentario</label>
-                    <input type="text" class="form-control mt-1" value="{{ medida.comentario}}" rows="8"></input>
+                    <label for="ayuda">Medida de talla de espalda</label>
+                    <input id="t_espalda" class="form-control mt-1" name="t_espalda" value="{{medida.t_espalda}}"></input>
+                </div>
+                <div class="mb-3">
+                    <label for="ayuda">Medida de talla delantera</label>
+                    <input id="t_delantera"class="form-control mt-1" name="t_delantera" value="{{medida.t_delantero}}"></input>
+                </div>
+                <div class="mb-3">
+                    <label for="ayuda">Medida de largo de pinza</label>
+                    <input id="l_pinza" class="form-control mt-1" name="l_pinza" value="{{medida.l_pinza}}"></input>
+                </div>
+                <div class="mb-3">
+                    <label for="ayuda">Medida de cintura</label>
+                    <input id="cintura" class="form-control mt-1" name="cintura" value="{{medida.cintura}}"></input>
+                </div>
+                <div class="mb-3">
+                    <label for="ayuda">Medida de largo de falda</label>
+                    <input id="l_falda" class="form-control mt-1" name="l_falda" value="{{medida.l_falda}}"></input>
+                </div>
+                <div class="mb-3">
+                    <label for="ayuda">Medida de largo de pierna</label>
+                    <input id="l_pierna" class="form-control mt-1" name="l_pierna" value="{{medida.l_pierna}}"></input>
+                </div>
+                <div class="mb-3">
+                    <label for="ayuda">Medida de ancho de pierna</label>
+                    <input id="a_pierna" class="form-control mt-1" name="a_pierna" value="{{medida.a_pierna}}"></input>
+                </div>
+                <div class="mb-3">
+                    <label for="ayuda">Medida de largo de tiro</label>
+                    <input id="l_tiro" class="form-control mt-1" name="l_tiro" value="{{medida.l_tiro}}"></input>
+                </div>
+                <div class="mb-3">
+                    <label for="ayuda">Medida de largo de rodilla</label>
+                    <input id="l_rodilla" class="form-control mt-1" name="l_rodilla" value="{{medida.l_rodilla}}"></input>
                 </div>
                 {% endfor %}
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                     Dato importante
                 </button>
-    
+
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                     aria-hidden="true">
@@ -56,11 +83,13 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exampleModalLabel">Cambiar talla</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                Si deseas cambiar algunos de los campos de tu talla comunicate con nosotros y te podremos
-                                ayudar para la actualización  
+                                Si deseas cambiar algunos de los campos de tu talla comunicate con nosotros y te
+                                podremos
+                                ayudar para la actualización
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

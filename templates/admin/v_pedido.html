@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucero alta costura</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="/static/interfaz/css/bootstrap.css" rel="stylesheet" />
+    <!-- FONT AWESOME STYLE  -->
+    <link href="/static/interfaz/css/font-awesome.css" rel="stylesheet" />
+    <!-- CUSTOM STYLE  -->
+    <link href="/static/interfaz/css/style.css" rel="stylesheet" />
+    <!-- DATATABLE STYLE  -->
+    <link href="/static/interfaz/js/dataTables/dataTables.bootstrap.css" rel="stylesheet" />
+    <!-- GOOGLE FONT -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+
+    <link rel="stylesheet" href="/static/css/confirmacion.css">
+    <!-- Confirmacion de mensajes -->
+    <link rel="stylesheet" href="/static/css/jquery-ui.css">
+    <link rel="stylesheet" href="/static/css/select2.min.css">
+    <link rel="stylesheet" href="/static/css/modal.css">
+    <script src="/static/interfaz/js/jquery-1.10.2.js"></script>
+    <!-- BOOTSTRAP SCRIPTS  -->
+    <script src="/static/interfaz/js/bootstrap.js"></script>
+    <script src="/static/interfaz/js/dataTables/jquery.dataTables.js"></script>
+    <script src="/static/interfaz/js/dataTables/dataTables.bootstrap.js"></script>
+    <script src="/static/interfaz/js/jquery-ui.js"></script>
+    <script src="/static/interfaz/js/select2.min.js"></script>
+    <script src="/static/interfaz/js/custom.js"></script>
+    <script src="/static/interfaz/js/sweetalert211.js"></script>
+    <script src="/static/interfaz/js/timemensaje.js"></script>
+    <style>
+        body {
+            background-color: #f9f9f9;
+        }
+
+        .voucher {
+            background-color: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px;
+        }
+
+        .header,
+        .footer {
+            text-align: center;
+        }
+
+        .footer {
+            font-size: 0.8em;
+            color: #666;
+        }
+
+        .voucher .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .voucher label {
+            font-weight: bold;
+        }
+
+        .value-box {
+            border: 1px solid #ced4da;
+            border-radius: .25rem;
+            padding: .375rem .75rem;
+            background-color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="voucher">
+            <div class="header">
+                <h2>Lucero</h2>
+                <p>Alta costura.<br>¡Este es tu momento, así que disfrútalo!</p>
+            </div>
+            <form>
+                <div class="form-group">
+                    <label for="nombre">Codigo del cliente:</label>
+                    {% if h_pedidos and h_pedidos|length > 0 %}
+                    <p>&nbsp; {{ h_pedidos[0].id_cliente }}</p> <!-- Mostrar id_cliente del primer pedido -->
+                    {% else %}
+                    <p>&nbsp; No se encontraron pedidos para este cliente.</p>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="value">VALE POR:</label>
+                    <div class="value-box" id="value">
+                        {% if h_pedidos and h_pedidos|length > 0 %}
+                        <div class="form-group">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Codigo del producto</th>
+                                        <th>Producto</th>
+                                        <th>Cantidad</th>
+                                        <th>Precio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for pedido in h_pedidos %}
+                                    <tr>
+                                        <td>{{ pedido.id_producto }}</td>
+                                        <td>{{ pedido.producto }}</td>
+                                        <td>{{ pedido.cantidad }}</td>
+                                        <td>{{ pedido.precio }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+
+
+                    </div>
+                </div>
+               
+            </form>
+        </div>
+    </div>
+</body>
+</html>

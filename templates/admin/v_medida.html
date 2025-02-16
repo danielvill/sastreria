@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Medidas</title>
+    <link href="/static/interfaz/css/bootstrap.css" rel="stylesheet" />
+    <!-- FONT AWESOME STYLE  -->
+    <link href="/static/interfaz/css/font-awesome.css" rel="stylesheet" />
+    <!-- CUSTOM STYLE  -->
+    <link href="/static/interfaz/css/style.css" rel="stylesheet" />
+    <!-- DATATABLE STYLE  -->
+    <link href="/static/interfaz/js/dataTables/dataTables.bootstrap.css" rel="stylesheet" />
+    <!-- GOOGLE FONT -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+
+    <link rel="stylesheet" href="/static/css/confirmacion.css">
+    <!-- Confirmacion de mensajes -->
+    <link rel="stylesheet" href="/static/css/jquery-ui.css">
+    <link rel="stylesheet" href="/static/css/select2.min.css">
+    <link rel="stylesheet" href="/static/css/modal.css">
+    <script src="/static/interfaz/js/jquery-1.10.2.js"></script>
+    <!-- BOOTSTRAP SCRIPTS  -->
+    <script src="/static/interfaz/js/bootstrap.js"></script>
+    <script src="/static/interfaz/js/dataTables/jquery.dataTables.js"></script>
+    <script src="/static/interfaz/js/dataTables/dataTables.bootstrap.js"></script>
+    <script src="/static/interfaz/js/jquery-ui.js"></script>
+    <script src="/static/interfaz/js/select2.min.js"></script>
+    <script src="/static/interfaz/js/custom.js"></script>
+    <script src="/static/interfaz/js/sweetalert211.js"></script>
+    <script src="/static/interfaz/js/timemensaje.js"></script>
+    <style>
+        body {
+            background-color: white;
+            font-family: Arial, sans-serif;
+            color: #59AB6E;
+        }
+
+        .container {
+            width: 50%;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-group textarea {
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Medidas</h1>
+        </div>
+        <div class="form-group">
+            <label for="nombre">Codigo del cliente:</label>
+            <input type="text" id="id_cliente" name="id_cliente" value="{{medida.id_cliente}}"
+                placeholder="{{medida.id_cliente}}">
+        </div>
+        <div class="form-group">
+            <label for="curso">Medidad de espalda:</label>
+            <input type="text" id="espalda" name="espalda" value="{{medida.espalda}}">
+        </div>
+        <div class="form-group">
+            <label for="materia">Medida de busto:</label>
+            <input type="text" id="busto" name="busto" value="{{medida.busto}}">
+        </div>
+        <div class="form-group">
+            <label for="importante">Medida de ante brazo</label>
+            <input id="a_brazo" name="a_brazo" value="{{medida.a_brazo}}"></input>
+        </div>
+        <div class="form-group">
+            <label for="nuevo">Medida de largo de brazo</label>
+            <input id="l_brazo" name="l_brazo" value="{{medida.l_brazo}}"></input>
+        </div>
+        <div class="form-group">
+            <label for="ayuda">Medida de ancho de puño</label>
+            <input id="a_puño" name="a_puño" value="{{medida.a_puño}}"></input>
+        </div>
+        <div class="form-group">
+            <label for="ayuda">Medida de talla de espalda</label>
+            <input id="t_espalda" name="t_espalda" value="{{medida.t_espalda}}"></input>
+        </div>
+        <div class="form-group">
+            <label for="ayuda">Medida de talla delantera</label>
+            <input id="t_delantera" name="t_delantera" value="{{medida.t_delantero}}"></input>
+        </div>
+        <div class="form-group">
+            <label for="ayuda">Medida de largo de pinza</label>
+            <input id="l_pinza" name="l_pinza" value="{{medida.l_pinza}}"></input>
+        </div>
+        <div class="form-group">
+            <label for="ayuda">Medida de cintura</label>
+            <input id="cintura" name="cintura" value="{{medida.cintura}}"></input>
+        </div>
+        <div class="form-group">
+            <label for="ayuda">Medida de largo de falda</label>
+            <input id="l_falda" name="l_falda" value="{{medida.l_falda}}"></input>
+        </div>
+        <div class="form-group">
+            <label for="ayuda">Medida de largo de pierna</label>
+            <input id="l_pierna" name="l_pierna" value="{{medida.l_pierna}}"></input>
+        </div>
+        <div class="form-group">
+            <label for="ayuda">Medida de ancho de pierna</label>
+            <input id="a_pierna" name="a_pierna" value="{{medida.a_pierna}}"></input>
+        </div>
+        <div class="form-group">
+            <label for="ayuda">Medida de largo de tiro</label>
+            <input id="l_tiro" name="l_tiro" value="{{medida.l_tiro}}"></input>
+        </div>
+        <div class="form-group">
+            <label for="ayuda">Medida de largo de rodilla</label>
+            <input id="l_rodilla" name="l_rodilla" value="{{medida.l_rodilla}}"></input>
+        </div>
+        <button type="submit" class="editar btn btn-primary">
+            Editar medida
+        </button>
+    </div>
+
+
+
+    <div id="editModal" title="Editar Medida" >
+        <form id="editForm" action="" method="post">
+            <div class="form-group">
+                <div class="col" hidden>
+                    <label for="">Codigo de medida</label>
+                    <input type="number" id="id_medida" name="id_medida" class="form-control" readonly>
+                </div>
+                <div class="col" hidden>
+                    <label for="">Codigo cliente</label>
+                    <input type="number" id="id_cliente" name="id_cliente" class="form-control">
+                </div>
+                <div class="col">
+                    <label for="usuario">Medida Espalda</label>
+                    <input type="number" id="espalda" name="espalda" class="form-control">
+                </div>
+                <div class="col">
+                    <label for="rol">Medida Busto</label>
+                    <input type="number" id="busto" name="busto" class="form-control">
+                </div>
+                <div class="col">
+                    <label for="rol">Medida largo de brazo</label>
+                    <input type="number" id="l_brazo" name="l_brazo" class="form-control">
+                </div>
+                <div class="col">
+                    <label for="rol">Medida ancho de puño</label>
+                    <input type="number" id="a_puño" name="a_puño" class="form-control">
+                </div>
+                <div class="col">
+                    <label for="rol">Talla espalda</label>
+                    <input type="number" id="t_espalda" name="t_espalda" class="form-control">
+                </div>
+                <div class="col">
+                    <label for="rol">Talla Delantero</label>
+                    <input type="text" id="t_delantero" name="t_delantero" class="form-control">
+                </div>
+                <div class="col">
+                    <label for="rol">Largo de Pinza</label>
+                    <input type="text" id="l_pinza" name="l_pinza" class="form-control">
+                </div>
+                <div class="col">
+                    <label for="rol">Cintura</label>
+                    <input type="text" id="cintura" name="cintura" class="form-control">
+                </div>
+                <div class="col">
+                    <label for="rol">Largo de falda</label>
+                    <input type="text" id="l_falda" name="l_falda" class="form-control">
+                </div>
+                <div class="col">
+                    <label for="rol">Largo de pierna</label>
+                    <input type="text" id="l_pierna" name="l_pierna" class="form-control">
+                </div>
+                <div class="col">
+                    <label for="rol">Ancho de pierna</label>
+                    <input type="text" id="a_pierna" name="a_pierna" class="form-control">
+                </div>
+                <div class="col">
+                    <label for="rol">Largo de tiro</label>
+                    <input type="text" id="l_tiro" name="l_tiro" class="form-control">
+                </div>
+                <div class="col">
+                    <label for="rol">Largo de rodilla</label>
+                    <input type="text" id="l_rodilla" name="l_rodilla" class="form-control">
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                "language": {
+                    "url": "/static/interfaz/js/Spanish.json"
+                }
+            });
+            var table = $('#myTable').DataTable();
+            //Cambio de english a spanish
+            // Funcionalidad de edición
+            table.on('click', '.editar', function () {
+                var row = $(this).closest('tr');
+                var data = table.row(row).data();
+                // Aquí puedes abrir el modal y llenar los campos del formulario con los datos del usuario
+                // Por ejemplo:
+                $('#id_medida').val(data[0]);
+                $('#id_cliente').val(data[1]);
+                $('#espalda').val(data[2]);
+                $('#busto').val(data[3]);
+                $('#a_brazo').val(data[4]);
+                $('#l_brazo').val(data[5]);
+                $('#a_puño').val(data[6]);
+                $('#t_espalda').val(data[7]);
+                $('#t_delantero').val(data[8]);
+                $('#l_pinza').val(data[9]);
+                $('#cintura').val(data[10]);
+                $('#l_falda').val(data[11]);
+                $('#l_pierna').val(data[12]);
+                $('#a_pierna').val(data[13]);
+                $('#l_tiro').val(data[14]);
+                $('#l_rodilla').val(data[15]);
+                $('#editForm').attr('action', '/edit_medi/' + data[0]); // Recuerda que en esta parte el 0 es la posicion selectora del codigo que estas usando en este caso es 0 ya que usas la cedula
+                $('#editModal').dialog('open');
+            });
+            // Inicializar el modal
+            $('#editModal').dialog({
+                autoOpen: false,
+                modal: true,
+                buttons: [
+                    {
+                        text: 'Guardar',
+                        click: function () {
+                            $('#editForm').submit();
+                        },
+                        // Agregar una clase al botón
+                        class: 'guardar'
+                    },
+                    {
+                        text: 'Cancelar',
+                        click: function () {
+                            $(this).dialog('close');
+                        },
+                        // Agregar una clase al botón
+                        class: 'cancelar'
+                    }
+                ]
+            });
+        });
+        $(".eliminar").click(function (event) {
+            event.preventDefault();
+            var url = $(this).attr('href'); // Guarda la URL del enlace
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¿Estás seguro de que quieres eliminar?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar!',
+                cancelButtonText: 'No, cancelar!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url; // Navega a la URL del enlace
+                }
+            });
+        });
+    </script>
+</body>
+</html>
