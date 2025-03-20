@@ -1,7 +1,10 @@
-from flask import Blueprint, render_template, request, flash, session, redirect, url_for
+import io
+from flask import Blueprint, render_template, request, flash, session, redirect, url_for,send_file
 from controllers.database import Conexion as dbase
 from modules.carrito import Carrito
 from modules.h_pedido import H_pedido
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
 from pymongo import MongoClient
 
 db = dbase()
@@ -52,6 +55,7 @@ def v_carri():
         flash("Inicia sesion con tu usuario y contraseña")
         return redirect(url_for('carrito.index')) # * Redirige al usuario al inicio si no está en la sesión
     carrito = db['carrito'].find()
+    
     return render_template("cliente/carrito.html", carrito=carrito)
 
 

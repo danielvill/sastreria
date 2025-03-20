@@ -113,7 +113,7 @@
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Ten presente lo siguiente
             </button>
-<br>
+            <br>
             <!-- Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                 aria-hidden="true">
@@ -124,7 +124,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            Recuerda agregar en el carrito el tipo de tela que deseas para tu ropa  
+                            Recuerda agregar en el carrito el tipo de tela que deseas para tu ropa
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -132,8 +132,7 @@
                     </div>
                 </div>
             </div>
-
-<br>
+            <br>
             <table class="cart-table">
                 <thead>
                     <tr>
@@ -156,7 +155,6 @@
                             </td>
                             <td hidden>
                                 <input type="text" name="id_producto" value="{{carrito.id_producto}}" readonly>
-
                             </td>
                             <td>
                                 {{carrito.producto}}
@@ -173,7 +171,6 @@
                                     readonly>
                             </td>
                             <td>
-
                                 <input type="text" class="resultado" name="resultado" value="{{carrito.resultado}}"
                                     readonly>
                             </td>
@@ -190,10 +187,8 @@
                                 </a>
                             </td>
                         </tr>
-
                         {% endfor %}
                 </tbody>
-
             </table>
             <div class="cart-summary">
                 <h2>Total del carrito</h2>
@@ -205,9 +200,7 @@
             </div>
             </form>
             <br>
-
         </div>
-
     </div>
 </div>
 
@@ -224,7 +217,6 @@
             });
             document.getElementById('total').innerText = total.toFixed(2);
         }
-
         document.querySelectorAll('.eliminar').forEach(function (button) {
             button.addEventListener('click', function (event) {
                 event.preventDefault();
@@ -233,22 +225,18 @@
                 updateResults();
             });
         });
-
         updateResults();
     });
-
     // Validacion si los campos estan vacios
     document.querySelector('form').onsubmit = function (e) {
         var inputs = this.querySelectorAll('input');
         var todosLlenos = true; // Asume que todos los campos están llenos
-
         for (var i = 0; i < inputs.length; i++) {
             if (inputs[i].value === '') {
                 todosLlenos = false; // Si un campo está vacío, establece todosLlenos en falso
                 break; // No necesitas verificar el resto de los campos, así que puedes salir del bucle
             }
         }
-
         if (!todosLlenos) {
             e.preventDefault(); // Previene el envío del formulario
             Swal.fire({
@@ -257,7 +245,7 @@
                 text: 'Campos estan vacios'
             });
         }
+       
     };
-
 </script>
 {% endblock %}

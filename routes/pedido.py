@@ -1,9 +1,17 @@
-from flask import Blueprint, render_template, request, flash, session, redirect, url_for
+from flask import Blueprint, make_response, render_template, request, flash, session, redirect, url_for,send_file
 from controllers.database import Conexion as dbase
 from modules.pedido import Pedido
 from pymongo import MongoClient
 from bson import ObjectId
 from bson.errors import InvalidId
+import io 
+from reportlab.lib.pagesizes import A4 ,letter
+from reportlab.pdfgen import canvas
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+
+
 db = dbase()
 pedido = Blueprint('pedido', __name__)
 
@@ -23,6 +31,7 @@ def get_next_sequence(name):
         return_document=True
     )
     return result.get('seq')
+
 
 @pedido.route("/cliente/carrito", methods=['GET', 'POST'])
 def adpedido():
@@ -50,7 +59,24 @@ def adpedido():
     else:
         return render_template('cliente/carrito.html')
 
-
+def generate_pdf(id_pedido, id_cliente, id_producto_list, producto_list, cantidad_list, precio_list, resultado_list):
+    buffer = io.BytesIO()
+    p = canvas.Canvas(buffer)
+    
+    # Aquí puedes personalizar el contenido del PDF
+    p.drawString(100, 750, f"Pedido ID: {id_pedido}")
+    p.drawString(100, 730, f"Cliente ID: {id_cliente}")
+    
+    y = 700
+    for id_producto, producto, cantidad, precio, resultado in zip(id_producto_list, producto_list, cantidad_list, precio_list, resultado_list):
+        p.drawString(100, y, f"Producto: {producto} - Cantidad: {cantidad} - Precio: {precio} - Resultado: {resultado}")
+        y -= 20
+    
+    p.showPage()
+    p.save()
+    
+    buffer.seek(0)
+    return buffer.getvalue()
 
 
 
@@ -158,7 +184,76 @@ def v_pedid():
 
 
 # Vista cliente dando gracias
-@pedido.route("/cliente/gracias",methods=['GET'])
+@pedido.route("/cliente/gracias", methods=['GET', 'POST'])
 def gracias():
-    return render_template('cliente/gracias.html')
+    # Consulta todos los pedidos (para el método GET)
+    pidi = list(db["pedido"].find())
 
+    # Obtener el id_cliente del primer pedido (si existe)
+    id_cliente = pidi[0]['id_cliente'] if pidi else None
+
+    if request.method == 'POST':
+        id_cliente = request.form.get('id_cliente')
+        
+        # Consulta la base de datos para obtener los pedidos del cliente
+        pedidos = list(db['pedido'].find({"id_cliente": id_cliente}))
+
+        if pedidos:
+            # Crear un PDF en memoria
+            buffer = io.BytesIO()
+            doc = SimpleDocTemplate(buffer, pagesize=letter)
+            elements = []
+
+            # Estilos
+            styles = getSampleStyleSheet()
+            style_title = styles['Title']
+            style_normal = styles['Normal']
+
+            # Título del PDF
+            title = Paragraph("Lucero Alta Costura", style_title)
+            elements.append(title)
+            elements.append(Spacer(1, 12))
+
+            # Código del cliente
+            codigo_cliente = Paragraph(f"Código: {id_cliente}", style_normal)
+            elements.append(codigo_cliente)
+            elements.append(Spacer(1, 12))
+
+            # Crear la tabla con los datos de los pedidos
+            data = [['Producto', 'Cantidad', 'Precio', 'Resultado']]
+            total = 0
+
+            for pedido in pedidos:
+                producto = pedido['producto']
+                cantidad = pedido['cantidad']
+                precio = pedido['precio']
+                resultado = pedido['resultado']
+                total += float(resultado)  # Sumar al total
+                data.append([producto, cantidad, precio, resultado])
+
+            # Añadir la fila del total
+            data.append(['', '', 'Total:', f"{total:.2f}"])
+
+            # Crear la tabla
+            table = Table(data)
+            table.setStyle(TableStyle([
+                ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+                ('BACKGROUND', (0, 1), (-1, -1), colors.white),
+                ('GRID', (0, 0), (-1, -1), 1, colors.black),
+            ]))
+
+            elements.append(table)
+            doc.build(elements)
+
+            # Mover el puntero al inicio del buffer
+            buffer.seek(0)
+
+            # Enviar el PDF como respuesta
+            return send_file(buffer, as_attachment=True, download_name='comprobante.pdf', mimetype='application/pdf')
+
+    # Renderizar la plantilla para el método GET
+    return render_template('cliente/gracias.html', pidi=pidi, id_cliente=id_cliente)

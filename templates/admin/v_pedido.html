@@ -106,21 +106,48 @@
                                     <tr>
                                         <td>{{ pedido.id_producto }}</td>
                                         <td>{{ pedido.producto }}</td>
-                                        <td>{{ pedido.cantidad }}</td>
-                                        <td>{{ pedido.precio }}</td>
+                                        <td class="canti">{{ pedido.cantidad }}</td>
+                                        <td class="precio">{{ pedido.precio }}</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>
+                            <div>
+                                <h1>Total <p class="result"></p>
+                                </h1>
+
+                            </div>
                         </div>
-                    {% endif %}
-
-
+                        {% endif %}
                     </div>
                 </div>
-               
             </form>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Obtener los elementos con la clase 'precio' y 'canti'
+            const precios = document.querySelectorAll('.precio');
+            const cantidades = document.querySelectorAll('.canti');
+
+            // Inicializar la variable para almacenar el total
+            let total = 0;
+
+            // Iterar sobre los elementos y multiplicar cantidad por precio
+            precios.forEach((precio, index) => {
+                // Obtener el valor de precio y cantidad
+                const valorPrecio = parseFloat(precio.textContent);
+                const valorCantidad = parseFloat(cantidades[index].textContent);
+
+                // Multiplicar cantidad por precio y sumar al total
+                total += valorCantidad * valorPrecio;
+            });
+
+            // Mostrar el resultado en el elemento con la clase 'result'
+            document.querySelector('.result').textContent = total.toFixed(2); // Mostrar con 2 decimales
+            console.log('Total calculado:', total);
+        });
+    </script>
 </body>
+
 </html>

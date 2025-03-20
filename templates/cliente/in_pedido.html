@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <title>Zay Shop - Product Detail Page</title>
+    <title>Lucero Alta Costura</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -28,6 +29,7 @@ https://templatemo.com/tm-559-zay-shop
 
 -->
 </head>
+
 <body>
     <!-- Start Top Nav -->
     <nav class="navbar navbar-expand-lg bg-dark navbar-light d-none d-lg-block" id="templatemo_nav_top">
@@ -36,9 +38,9 @@ https://templatemo.com/tm-559-zay-shop
                 <div>
                     <i class="fa fa-envelope mx-2"></i>
                     <a class="navbar-sm-brand text-light text-decoration-none"
-                        href="mailto:info@company.com">info@company.com</a>
+                        href="mailto:info@company.com">lucero@hotmail.com</a>
                     <i class="fa fa-phone mx-2"></i>
-                    <a class="navbar-sm-brand text-light text-decoration-none" href="tel:010-020-0340">010-020-0340</a>
+                    <a class="navbar-sm-brand text-light text-decoration-none" href="tel:0939216477">0939216477</a>
                 </div>
                 <div>
                     <a class="text-light" href="https://fb.com/templatemo" target="_blank" rel="sponsored"><i
@@ -80,7 +82,7 @@ https://templatemo.com/tm-559-zay-shop
                         <li class="nav-item">
                             <a class="nav-link" href="/cliente/shop">Comprar producto</a>
                         </li>
-                        
+
                     </ul>
                 </div>
                 <div class="navbar align-self-center d-flex">
@@ -92,12 +94,8 @@ https://templatemo.com/tm-559-zay-shop
                             </div>
                         </div>
                     </div>
+
                     
-                    <a class="nav-icon position-relative text-decoration-none" href="#">
-                        <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
-                        <span
-                            class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">7</span>
-                    </a>
                     <a class="nav-icon position-relative text-decoration-none" href="{{ url_for('logout') }}">
                         <i class="fa fa-fw fa-user text-dark mr-3"></i>
                         <span
@@ -166,7 +164,7 @@ https://templatemo.com/tm-559-zay-shop
                                 <input type="hidden" name="id_producto" value="{{ producto['id_producto'] }}">
                                 <input type="hidden" name="producto" value="{{ producto['nombre'] }}">
                                 <input type="hidden" name="precio" value="{{ producto['precio'] }}">
-                                
+
                                 <div class="row">
                                     <div class="col-auto">
                                         <ul class="list-inline pb-3">
@@ -177,26 +175,25 @@ https://templatemo.com/tm-559-zay-shop
                                         <ul class="list-inline pb-3">
                                             <li class="list-inline-item text-right">
                                                 Cantidad
-                                                <input type="hidden" name="cantidad" id="product-quantity"
-                                                    value="1">
+                                                <input type="hidden" name="cantidad" id="product-quantity" value="1">
                                             </li>
                                             <li class="list-inline-item"><span class="btn btn-success"
-                                                    id="btn-minus">-</span></li>
+                                                    id="btn-minusi">-</span></li>
                                             <li class="list-inline-item"><span class="badge bg-secondary"
                                                     id="var-value">1</span></li>
                                             <li class="list-inline-item"><span class="btn btn-success"
-                                                    id="btn-plus">+</span></li>
+                                                    id="btn-plusi">+</span></li>
                                         </ul>
                                     </div>
                                 </div>
                                 <div class="row pb-3">
                                     <div class="col d-grid">
                                         <button type="submit" class="btn btn-success btn-lg" name="submit"
-                                            value="buy">Pedir</button>
+                                            value="buy">Añadir al carrito</button>
                                     </div>
-                                    <div class="col d-grid">
+                                    <div class="col d-grid" hidden>
                                         <button type="submit" class="btn btn-success btn-lg" name="submit"
-                                            value="addtocard">Añadir al carro</button>
+                                            value="addtocard" hidden>Añadir al carro</button>
                                     </div>
                                 </div>
                             </form>
@@ -219,7 +216,8 @@ https://templatemo.com/tm-559-zay-shop
                 <div class="col-md-4">
                     <div class="product-wap card rounded-0">
                         <div class="card rounded-0">
-                            <img class="card-img rounded-0 img-fluid" src="{{ url_for('static', filename='img/producto/' + producto['imagen']) }}"
+                            <img class="card-img rounded-0 img-fluid"
+                                src="{{ url_for('static', filename='img/producto/' + producto['imagen']) }}"
                                 alt="{{ producto.nombre }}">
                             <div
                                 class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
@@ -287,5 +285,42 @@ https://templatemo.com/tm-559-zay-shop
             ]
         });
     </script>
+    <script>
+        // Obtener elementos para lo que es el envio del input de cantidad y se pueda mandar en el form
+        const btnMinus = document.getElementById('btn-minusi');
+        const btnPlus = document.getElementById('btn-plusi');
+        const quantityInput = document.getElementById('product-quantity');
+        const quantityDisplay = document.getElementById('var-value');
+
+        // Función para actualizar el valor y mostrarlo
+        function updateQuantity(change) {
+            // Obtener el valor actual
+            let currentValue = parseInt(quantityInput.value);
+            // Actualizar el valor
+            currentValue += change;
+            // Asegurarse de que el valor no sea menor a 0
+            if (currentValue < 1) currentValue = 1;
+            // Actualizar el input y el display
+            quantityInput.value = currentValue;
+            quantityDisplay.textContent = currentValue;
+        }
+
+        // Asignar eventos a los botones
+        btnMinus.addEventListener('click', () => updateQuantity(-1));
+        btnPlus.addEventListener('click', () => updateQuantity(1));
+
+        // Asegurarse de que el valor correcto se envíe
+        document.querySelector('form').addEventListener('submit', (event) => {
+            // Forzar la actualización del valor del input antes de enviar el formulario
+            quantityInput.value = quantityDisplay.textContent;
+
+            // Validar que el valor no sea cero
+            if (parseInt(quantityInput.value) === 0) {
+                event.preventDefault(); // Prevenir el envío del formulario
+                alert('La cantidad no puede ser cero. Por favor, elige una cantidad mayor a cero.');
+            }
+        });
+    </script>
 </body>
+
 </html>

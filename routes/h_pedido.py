@@ -14,7 +14,7 @@ h_pedido = Blueprint('h_pedido', __name__)
 def v_hpedi():
     if 'username' not in session:
         flash("Inicia sesion con tu usuario y contraseña")
-        return redirect(url_for('admin.index'))  # Redirige al usuario al inicio si no está en la sesión
+        return redirect(url_for('h_pedido.index'))  # Redirige al usuario al inicio si no está en la sesión
 
     # Agrupa los pedidos por id_cliente y selecciona el primer pedido de cada grupo
     pipeline = [

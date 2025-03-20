@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -45,8 +46,18 @@
         }
 
         .button-container {
-            text-align: center;
-            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            /* Separa los elementos al máximo */
+            align-items: center;
+            /* Alinea verticalmente los botones */
+            width: 100%;
+            /* Asegúrate de que el contenedor ocupe todo el ancho disponible */
+        }
+
+        .button-container form {
+            margin: 0;
+            /* Elimina el margen predeterminado del formulario */
         }
 
         .button {
@@ -80,6 +91,7 @@
     <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" />
 </head>
+
 <body>
     <div class="container">
         <br>
@@ -90,21 +102,30 @@
         <div class="content">
             <div class="section">
                 <p>
-                    Agradecemos por comprar nuestros productos de nuestra sastreria en estos dias te estaremos llamando o enviado un mensaje para 
+                    Agradecemos por comprar nuestros productos de nuestra sastreria en estos dias te estaremos llamando
+                    o enviado un mensaje para
                     completar la entrega y el pago.
                     <br>
                 </p>
                 <p>
-                    LUCERO ALTA COSTURA TE AGRADECE POR CONFIAR EN NOSOTROS 😀 
+                    LUCERO ALTA COSTURA TE AGRADECE POR CONFIAR EN NOSOTROS 😀
                 </p>
             </div>
+
             <div class="button-container">
-                <button onclick="mostrarSpinner()" class="button" href="./login">
-                    Aceptar</button>
+                <form method="post" id="myForm">
+                    <input hidden type="text" name="id_cliente" id="id_cliente" value="{{ id_cliente }}">
+                    <button type="submit" class="button">Descargar Comprobante</button>
+                </form>
+                <button type="button" onclick="mostrarSpinner()" class="button" href="./login">
+                    Salir
+                </button>
             </div>
+
             <div id="spinner-container" class="spinner-container">
                 <ion-spinner id="spinner" style="color: #ff4081;"></ion-spinner>
             </div>
+
         </div>
     </div>
     <script>
@@ -121,4 +142,5 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>
