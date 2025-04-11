@@ -1,3 +1,20 @@
+#Saco
+#Talla Delantero
+#Largo de Saco
+#Ancho de espalda
+#Largo de Manga
+#Puño
+#Ancho de Brazo
+#Cont De Pecho
+#Cont De Cintura
+#Pecho
+#Alto de Busto
+#Distancia de Busto
+#Talla de Espalda
+#Media Espalda
+#Escote
+
+
 class Medida:
     def __init__(self,id_medida,id_cliente,espalda,busto,a_brazo,l_brazo,a_puño,t_espalda,t_delantero,l_pinza,cintura,l_falda,l_pierna,a_pierna,l_tiro,l_rodilla ):
         

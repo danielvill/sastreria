@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="/static/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/assets/css/templatemo.css">
     <link rel="stylesheet" href="/static/assets/css/custom.css">
-
+    <link rel="stylesheet" href="/static/css/confirmacion.css">
     <!-- Load fonts style after rendering the layout styles -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
@@ -35,7 +35,8 @@
     <script src="/static/assets/js/templatemo.js"></script>
     <script src="/static/assets/js/custom.js"></script>
     <script src="/static/interfaz/js/jquery-ui.js"></script>
-
+    <script src="/static/interfaz/js/timemensaje.js"></script>
+    
 </head>
 
 <body>
@@ -79,16 +80,8 @@
                 <div class="flex-fill">
                     <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="./in_medida">Ingresar medida</a>
+                            <a class="nav-link" href="../cliente/in_medida">Regresar</a>
                         </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="./shop">Comprar producto</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="./carrito">Carrito</a>
-                        </li>
-                        
                     </ul>
                 </div>
                 <div class="navbar align-self-center d-flex">
@@ -102,11 +95,7 @@
                     </div>
                     
                     
-                    <a class="nav-icon position-relative text-decoration-none" href="{{ url_for('logout') }}">
-                        <i class="fa fa-fw fa-user text-dark mr-3"></i>
-                        <span
-                            class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark"></span>
-                    </a>
+                    
                 </div>
             </div>
 
