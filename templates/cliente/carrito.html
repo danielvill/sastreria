@@ -102,13 +102,7 @@
 <div class="container py-5">
     <div class="row py-5">
         <div class="col-md-9 m-auto">
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-            <div class="alert alert-danger">
-                {{ messages[0] }}
-            </div>
-            {% endif %}
-            {% endwith %}
+            
             <!-- Button trigger modal -->
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Ten presente lo siguiente
@@ -133,6 +127,11 @@
                 </div>
             </div>
             <br>
+            {% if error_message %}
+            <div class="alert alert-danger">
+                {{ error_message }}
+            </div>
+            {% endif %}
             <table class="cart-table">
                 <thead>
                     <tr>

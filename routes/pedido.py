@@ -32,32 +32,73 @@ def get_next_sequence(name):
     )
     return result.get('seq')
 
-
+# Este es para procesar el formulario de lo que son pedidos para este apartado
 @pedido.route("/cliente/carrito", methods=['GET', 'POST'])
 def adpedido():
     
     if request.method == 'POST':
-        id_pedido = str(get_next_sequence('pedidoId')).zfill(1)
-        pedido = db["pedido"]
-        carrito = db["carrito"]
         id_cliente = request.form['id_cliente']
         id_producto_list = request.form.getlist('id_producto')
         producto_list = request.form.getlist('producto')
         cantidad_list = request.form.getlist('cantidad')
         precio_list = request.form.getlist('precio')
         resultado_list = request.form.getlist('resultado')
-
-        # Suponiendo que todos los lists son del mismo tamaño
-        for id_producto, producto, cantidad, precio, resultado in zip(id_producto_list, producto_list, cantidad_list, precio_list, resultado_list):
-            pedi = Pedido(id_pedido, id_cliente, id_producto, producto, cantidad, precio, resultado)
-            pedido.insert_one(pedi.PedidoDBCollection())
         
-        # Eliminar todos los documentos en la colección carrito
-        carrito.delete_many({})
-
-        return redirect(url_for('pedido.gracias'))
+        # Verificar disponibilidad de productos
+        productos = db["producto"]
+        error_message = None
+        
+        for i, (id_producto, cantidad) in enumerate(zip(id_producto_list, cantidad_list)):
+            # Convertir cantidad a entero
+            cantidad_solicitada = int(cantidad)
+            
+            # Obtener producto de la base de datos
+            producto_db = productos.find_one({"id_producto": id_producto})
+            
+            if producto_db:
+                # Convertir la cantidad de string a entero
+                cantidad_disponible = int(producto_db.get("cantidad", 0))
+                
+                # Verificar si hay suficiente cantidad
+                if cantidad_solicitada > cantidad_disponible:
+                    error_message = f"No hay suficiente stock del producto '{producto_list[i]}'. Cantidad disponible: {cantidad_disponible}. por favor eliminar el producto"
+                    break
+        
+        # Si no hay errores, proceder con la creación del pedido
+        if error_message is None:
+            id_pedido = str(get_next_sequence('pedidoId')).zfill(1)
+            pedido = db["pedido"]
+            carrito = db["carrito"]
+            
+            for id_producto, producto, cantidad, precio, resultado in zip(id_producto_list, producto_list, cantidad_list, precio_list, resultado_list):
+                cantidad_int = int(cantidad)
+                
+                # Crear el pedido
+                pedi = Pedido(id_pedido, id_cliente, id_producto, producto, cantidad, precio, resultado)
+                pedido.insert_one(pedi.PedidoDBCollection())
+                
+                # Obtener producto actual
+                producto_actual = productos.find_one({"id_producto": id_producto})
+                if producto_actual:
+                    # Calcular la nueva cantidad
+                    cantidad_actual = int(producto_actual.get("cantidad", 0))
+                    nueva_cantidad = cantidad_actual - cantidad_int
+                    
+                    # Actualizar con el nuevo valor numérico
+                    productos.update_one(
+                        {"id_producto": id_producto},
+                        {"$set": {"cantidad": str(nueva_cantidad)}}  # Mantener como string si así está en la BD
+                    )
+            
+            # Eliminar todos los documentos en la colección carrito
+            carrito.delete_many({})
+            return redirect(url_for('pedido.gracias'))
+        else:
+            # Devolver a la página con mensaje de error
+            return render_template('cliente/carrito.html', error_message=error_message)
     else:
         return render_template('cliente/carrito.html')
+    
 
 def generate_pdf(id_pedido, id_cliente, id_producto_list, producto_list, cantidad_list, precio_list, resultado_list):
     buffer = io.BytesIO()

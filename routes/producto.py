@@ -52,6 +52,7 @@ def adpro():
         categoria = request.form['categoria']
         subcategoria = request.form['subcategoria']
         descripcion = request.form['descripcion']
+        cantidad = request.form['cantidad']
         
         if 'imagen' not in request.files:
             flash('No file part')
@@ -66,7 +67,7 @@ def adpro():
                 file.save(file_path)
                 imagen_filename = filename
             
-        produc = Producto(id_producto, nombre, precio, categoria,subcategoria,descripcion, imagen_filename)
+        produc = Producto(id_producto, nombre, precio, categoria,subcategoria,descripcion, cantidad,imagen_filename)
         producto.insert_one(produc.ProductoDBCollection())
         flash("Producto agregado correctamente","success")
         return redirect(url_for('producto.adpro'))
@@ -89,6 +90,7 @@ def edit_pro(edipro):
         categoria = request.form["categoria"]
         subcategoria = request.form["subcategoria"]
         descripcion = request.form["descripcion"]
+        cantidad = request.form["cantidad"]
 
         if "imagen" in request.files and request.files['imagen'].filename != '':
             file = request.files['imagen']
@@ -111,6 +113,7 @@ def edit_pro(edipro):
                     "categoria": categoria,
                     "subcategoria": subcategoria,
                     "descripcion": descripcion,
+                    "cantidad": cantidad,   
                     "imagen": imagen_filename
                 }})
                 flash("Producto " + nombre + " actualizado correctamente","success")

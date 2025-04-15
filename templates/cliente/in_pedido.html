@@ -76,9 +76,7 @@ https://templatemo.com/tm-559-zay-shop
                         <li class="nav-item">
                             <a class="nav-link" href="/cliente/in_medida">Ingresar medida</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/cliente/medida">Visualizar medida</a>
-                        </li>
+                        
                         <li class="nav-item">
                             <a class="nav-link" href="/cliente/shop">Comprar producto</a>
                         </li>
@@ -157,8 +155,9 @@ https://templatemo.com/tm-559-zay-shop
                             <h6>Description:</h6>
                             <p>{{ producto['descripcion'] }}</p>
                             <br>
+                            <h6>Cantidad del producto disponibles </h6>
+                            <p>{{ producto['cantidad'] }}</p>
                             <br>
-
                             <form action="{{ url_for('carrito.adcarrito') }}" method="post">
                                 <input type="hidden" name="id_cliente" value="{{ id_cliente }}">
                                 <input type="hidden" name="id_producto" value="{{ producto['id_producto'] }}">

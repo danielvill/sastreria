@@ -75,14 +75,14 @@ https://templatemo.com/tm-559-zay-shop
                         <li class="nav-item">
                             <a class="nav-link" href="./in_medida">Ingresar medida</a>
                         </li>
-                       
+
                         <li class="nav-item">
                             <a class="nav-link" href="./shop">Comprar producto</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="./carrito">Carrito</a>
                         </li>
-                        
+
 
                     </ul>
                 </div>
@@ -139,13 +139,16 @@ https://templatemo.com/tm-559-zay-shop
                 <ul class="list-unstyled templatemo-accordion">
                     {% for cat in categorias %}
                     <li class="pb-3">
-                        <a class="collapsed d-flex justify-content-between h3 text-decoration-none" href="{{ url_for('pedido.shop', categoria=cat) }}">
+                        <a class="collapsed d-flex justify-content-between h3 text-decoration-none"
+                            href="{{ url_for('pedido.shop', categoria=cat) }}">
                             {{ cat }}
                             <i class="fa fa-fw fa-chevron-circle-down mt-1"></i>
                         </a>
                         <ul class="collapse show list-unstyled pl-3">
                             {% for subcat in categorias[cat] %}
-                            <li><a class="text-decoration-none" href="{{ url_for('pedido.shop', categoria=cat, subcategoria=subcat) }}">{{ subcat }}</a></li>
+                            <li><a class="text-decoration-none"
+                                    href="{{ url_for('pedido.shop', categoria=cat, subcategoria=subcat) }}">{{ subcat
+                                    }}</a></li>
                             {% endfor %}
                         </ul>
                     </li>
@@ -194,11 +197,11 @@ https://templatemo.com/tm-559-zay-shop
                                 <div
                                     class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
                                     <ul class="list-unstyled">
-                                        
+
                                         <li><a class="btn btn-success text-white mt-2"
                                                 href="{{ url_for('pedido.in_pedido', id_producto=producto['_id']) }}"><i
                                                     class="far fa-eye"></i></a></li>
-                                       
+
                                     </ul>
                                 </div>
                             </div>
@@ -208,6 +211,7 @@ https://templatemo.com/tm-559-zay-shop
                                 <ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
                                     <li>{{ producto['descripcion'] }}</li>
                                 </ul>
+                                
                                 <ul class="list-unstyled d-flex justify-content-center mb-1">
                                     <li>
                                         <i class="text-warning fa fa-star"></i>
@@ -217,7 +221,8 @@ https://templatemo.com/tm-559-zay-shop
                                         <i class="text-muted fa fa-star"></i>
                                     </li>
                                 </ul>
-                                <p class="text-center mb-0">${{ producto['precio'] }}</p>
+                                
+                                <p class="text-center mb-0">Precio  ${{ producto['precio'] }}</p>
                             </div>
                         </div>
                     </div>
@@ -253,4 +258,5 @@ https://templatemo.com/tm-559-zay-shop
     <script src="/static/assets/js/custom.js"></script>
     <!-- End Script -->
 </body>
+
 </html>
