@@ -16,53 +16,53 @@
             {% endwith %}
             <div class="row">
                 <div class="form-group col-md-6 mb-3" hidden>
-
                     <label for="inputemail">id Cliente</label>
                     <input type="text" class="form-control mt-1" name="id_cliente" value="{{id_cliente}}"
                         placeholder="medida en cm">
                 </div>
-                <div class="form-group  mb-3">
+                <div class="form-group  col-md-6 mb-3">
                     <label for="inputemail">Alto de rodilla</label>
                     <input type="text" class="form-control mt-1" name="alto_rodilla" placeholder="medida en cm">
                 </div>
-                <div class=" mb-3">
+                <div class=" col-md-6 mb-3">
                     <label for="inputemail">Largo de pantalon</label>
                     <input type="number" class="form-control mt-1" name="largo_pantalon" placeholder="medida en cm"
                         rows="8">
                 </div>
+                <div class="col-md-6 mb-3">
+                    <label for="inputsubject">Cintura</label>
+                    <input type="number" class="form-control mt-1" id="cadera" name="cintura" placeholder="medida en cm"
+                        required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="inputsubject">Cadera</label>
+                    <input type="number" class="form-control mt-1" id="vuelo" name="cadera" placeholder="medida en cm"
+                        required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="inputsubject">Muslo</label>
+                    <input type="number" class="form-control mt-1" id="muslo" name="muslo" placeholder="medida en cm"
+                        required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="inputsubject">Rodilla</label>
+                    <input type="number" class="form-control mt-1" id="rodilla" name="rodilla" placeholder="medida en cm"
+                        required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="inputsubject">Basta</label>
+                    <input type="number" class="form-control mt-1" id="basta" name="basta" placeholder="medida en cm"
+                        required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="inputsubject">Tiro</label>
+                    <input type="number" class="form-control mt-1" id="tiro" name="tiro" placeholder="medida en cm"
+                        required>
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="inputsubject">Cintura</label>
-                <input type="number" class="form-control mt-1" id="cadera" name="cintura" placeholder="medida en cm"
-                    required>
-            </div>
-            <div class="mb-3">
-                <label for="inputsubject">Cadera</label>
-                <input type="number" class="form-control mt-1" id="vuelo" name="cadera" placeholder="medida en cm"
-                    required>
-            </div>
-            <div class="mb-3">
-                <label for="inputsubject">Muslo</label>
-                <input type="number" class="form-control mt-1" id="muslo" name="muslo" placeholder="medida en cm"
-                    required>
-            </div>
-            <div class="mb-3">
-                <label for="inputsubject">Rodilla</label>
-                <input type="number" class="form-control mt-1" id="rodilla" name="rodilla" placeholder="medida en cm"
-                    required>
-            </div>
-            <div class="mb-3">
-                <label for="inputsubject">Basta</label>
-                <input type="number" class="form-control mt-1" id="basta" name="basta" placeholder="medida en cm"
-                    required>
-            </div>
-            <div class="mb-3">
-                <label for="inputsubject">Tiro</label>
-                <input type="number" class="form-control mt-1" id="tiro" name="tiro" placeholder="medida en cm"
-                    required>
-            </div>
+            <br>
             <div class="row">
-                <div class="col text-end mt-2">
+                <div class="col-md-6 mb-3">
                     <button type="submit" class="btn btn-success btn-lg px-3">Guardar medida</button>
                 </div>
             </div>

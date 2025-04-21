@@ -74,11 +74,11 @@
         </div>
     </section>
     <!-- MENU SECTION END-->
-    <div class="content-wrapper">
+    <div class="content-wrapper" id="comprobar">
         <div class="container">
             <div class="row pad-botm">
                 <div class="col-md-12">
-                    <h3 class="header-line">Medidas del cliente   </h3>
+                    <h3 class="header-line">Medidas del cliente </h3>
                     <h4>{{cliente.apellido}}</h4>
                     <h4>{{cliente.telefono}}</h4>
                     <h4>{{cliente.correo}}</h4>
@@ -439,14 +439,14 @@
             </div>
 
             <!-- Cuarto modulo  -->
-            
+
             <div class="row">
                 <div class="col-md-6">
                     <!--   Kitchen Sink -->
                     <div class="panel panel-default">
                         <img src="/static/img/saco.jpg" alt="" width="200px" height="200px">
                         <div class="panel-heading">
-                            Saco                        </div>
+                            Saco </div>
                         <div class="panel-body">
                             <div class="table-responsive">
                                 <div>
@@ -538,10 +538,25 @@
                     </div>
                     <!-- End  Kitchen Sink -->
                 </div>
-                
+
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let contentWrapper = document.getElementById("comprobar");
+            let containers = contentWrapper.querySelectorAll(".panel");
+
+            containers.forEach(container => {
+                let inputs = container.querySelectorAll("input");
+                let hasData = Array.from(inputs).some(input => input.placeholder.trim() !== ""); // Verifica si algún input tiene datos
+
+                container.style.display = hasData ? "block" : "none"; // Muestra u oculta todo el contenedor
+            });
+        });
+
+
+    </script>
 </body>
 
 </html>

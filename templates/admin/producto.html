@@ -1,5 +1,37 @@
 {% extends "admin/layout.html" %}
 {% block content %}
+<style>
+    .card {
+        height: 100%;
+        transition: transform 0.3s;
+        margin-bottom: 20px;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .card-img-top {
+        height: 150px;
+        object-fit: contain;
+        padding: 15px;
+    }
+    .card-footer {
+        display: flex;
+        justify-content: space-between;
+    }
+    .producto-contenedor {
+        display: none;
+    }
+    #filtro-container {
+        margin-bottom: 20px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+    }
+    .badge {
+        font-size: 0.8rem;
+    }
+</style>
 <div class="row">
     <div class="col-md-12">
         {% with messages = get_flashed_messages() %}
@@ -9,70 +41,71 @@
         </div>
         {% endif %}
         {% endwith %}
-        <table  class="table table-bordered table-hover  " id="myTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Precio</th>
-                    <th>Categoria</th>
-                    <th>Subcategoria</th>
-                    <th>Imagen</th>
-                    <th>Descripcion</th>
-                    <th>Cantidad</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
+        <div class="container py-4">
+            <h2 class="text-center mb-4">Catálogo de Productos</h2>
+            
+            <!-- Filtros -->
+            <div id="filtro-container" class="row">
+                <div class="col-md-3 mb-2">
+                    <input type="text" id="filtro-id" class="form-control" placeholder="Filtrar por ID">
+                </div>
+                <div class="col-md-3 mb-2">
+                    <input type="text" id="filtro-nombre" class="form-control" placeholder="Filtrar por Nombre">
+                </div>
+                <div class="col-md-3 mb-2">
+                    <select id="filtro-categoria" class="form-select">
+                        <option value="">Todas las Categorías</option>
+                        <!-- Aquí se generarán las opciones dinámicamente desde JS -->
+                    </select>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <select id="filtro-subcategoria" class="form-select">
+                        <option value="">Todas las Subcategorías</option>
+                        <!-- Aquí se generarán las opciones dinámicamente desde JS -->
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Contenedor de tarjetas de productos -->
+            <div class="row" id="productos-container">
                 {% for producto in producto %}
-                <tr>
-                    <td>
-                        {{producto.id_producto}}
-                    </td>
-                    <td>
-                        {{producto.nombre}}
-                    </td>
-                    <td>
-                        {{producto.precio}}
-                    </td>
-                    <td>
-                        {{producto.categoria}}
-                    </td>
-                    <td>
-                        {{producto.subcategoria}}
-                    </td>
-                    <td>
-                        <img src="{{ url_for('static', filename='img/producto/' + producto.imagen) }}" alt="Imagen de herramienta" width="200">
-                    </td>
-                    <td>
-                        {{producto.descripcion}}
-                    </td>
-                    <td>
-                        {{producto.cantidad}}
-                    </td>
-                    <td>
-                        <button type="submit" class="editar btn btn-primary" style="background-color: #59AB6E;" >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-                            </svg>
-                        </button>
-                        <a href="{{url_for('producto.delete_pr', eliadpro = producto.id_producto)}}"
-                            class="eliminar btn btn-danger">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-x-octagon" viewBox="0 0 16 16">
-                                <path
-                                    d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z" />
-                                <path
-                                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
-                            </svg>
-                        </a>
-                    </td>
-                </tr>
-                </form>
+                <div class="col-md-4 col-lg-3 mb-4 producto-item">
+                    <div class="card h-100">
+                        <img src="{{ url_for('static', filename='img/producto/' + producto.imagen) }}" class="card-img-top" alt="Imagen de {{ producto.nombre }}">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ producto.nombre }}</h5>
+                            <p class="card-text producto-id">ID: <span class="fw-bold">{{ producto.id_producto }}</span></p>
+                            <p class="card-text producto-precio">Precio: <span class="fw-bold">${{ producto.precio }}</span></p>
+                            <p class="card-text producto-cantidad">Cantidad: <span class="fw-bold">{{ producto.cantidad }}</span></p>
+                            <p class="card-text producto-categoria">
+                                <span class="badge bg-primary">{{ producto.categoria }}</span>
+                                {% if producto.subcategoria %}
+                                <span class="badge bg-secondary">{{ producto.subcategoria }}</span>
+                                {% endif %}
+                            </p>
+                            <p class="card-text producto-descripcion">{{ producto.descripcion }}</p>
+                        </div>
+                        <div class="card-footer">
+                            <button type="button" class="editar btn btn-sm btn-primary" style="background-color: #59AB6E;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                                </svg>
+                                Editar
+                            </button>
+                            <a href="{{url_for('producto.delete_pr', eliadpro = producto.id_producto)}}" class="eliminar btn btn-sm btn-danger">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-octagon" viewBox="0 0 16 16">
+                                    <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
+                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                                </svg>
+                                Eliminar
+                            </a>
+                        </div>
+                    </div>
+                </div>
                 {% endfor %}
-            </tbody>
-        </table>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -99,9 +132,9 @@
                 <label for="rol">Sub Categoria</label>
                 <input type="text" id="subcategoria" name="subcategoria" class="form-control">
             </div>
-            <div class="col">
+            <div class="col" hidden>
                 <label for="rol">Iamgen</label>
-                <input type="file" id="categoria" name="categoria" class="form-control">
+                <input type="file" id="imagen" name="imagen" class="form-control">
             </div>
             <div class="col">
                 <label for="rol">Descripcion</label>
@@ -117,41 +150,17 @@
 
 <script>
     $(document).ready(function () {
-    $('#myTable').DataTable({
-        "language": {
-            "url": "/static/interfaz/js/Spanish.json"
-        }
-    });
-    var table = $('#myTable').DataTable();
-    //Cambio de english a spanish
-    // Funcionalidad de edición
-    table.on('click', '.editar', function () {
-        var row = $(this).closest('tr');
-        var data = table.row(row).data();
-        // Aquí puedes abrir el modal y llenar los campos del formulario con los datos del usuario
-        // Por ejemplo:
-        $('#id_producto').val(data[0]);
-        $('#nombre').val(data[1]);
-        $('#precio').val(data[2]);
-        $('#categoria').val(data[3]);
-        $('#subcategoria').val(data[4]);
-        $('#imagen').val(data[5]);
-        $('#descripcion').val(data[6]);
-        $('#cantidad').val(data[7]);
-        $('#editForm').attr('action','/edit_pro/'+ data[0]); // Recuerda que en esta parte el 0 es la posicion selectora del codigo que estas usando en este caso es 0 ya que usas la cedula
-        $('#editModal').dialog('open');
-    });
     // Inicializar el modal
     $('#editModal').dialog({
         autoOpen: false,
         modal: true,
+        width: 500,
         buttons: [
             {
                 text: 'Guardar',
                 click: function () {
                     $('#editForm').submit();
                 },
-                // Agregar una clase al botón
                 class: 'guardar'
             },
             {
@@ -159,29 +168,120 @@
                 click: function () {
                     $(this).dialog('close');
                 },
-                // Agregar una clase al botón
                 class: 'cancelar'
             }
         ]
     });
-});
-$(".eliminar").click(function (event) {
-    event.preventDefault();
-    var url = $(this).attr('href'); // Guarda la URL del enlace
-    Swal.fire({
-        title: '¿Estás seguro?',
-        text: "¿Estás seguro de que quieres eliminar?",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Sí, eliminar!',
-        cancelButtonText: 'No, cancelar!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            window.location.href = url; // Navega a la URL del enlace
-        }
+
+    // Funcionalidad de edición para el diseño de tarjetas
+    $('.editar').on('click', function () {
+        // Obtener la tarjeta (card) que contiene el producto
+        var card = $(this).closest('.card');
+        
+        // Extraer información de la tarjeta
+        var id_producto = card.find('.producto-id span').text().trim();
+        var nombre = card.find('.card-title').text().trim();
+        var precio = card.find('.producto-precio span').text().trim().replace('$', '');
+        var cantidadTexto = card.find('.producto-cantidad span').text().trim();
+        var descripcion = card.find('.producto-descripcion').text().trim();
+        
+        // Obtener categoría y subcategoría de las etiquetas (badges)
+        var categoria = card.find('.badge.bg-primary').text().trim();
+        var subcategoria = card.find('.badge.bg-secondary').text().trim();
+        
+        // Llenar los campos del formulario con los datos del producto
+        $('#id_producto').val(id_producto);
+        $('#nombre').val(nombre);
+        $('#precio').val(precio);
+        $('#categoria').val(categoria);
+        $('#subcategoria').val(subcategoria);
+        $('#descripcion').val(descripcion);
+        $('#cantidad').val(cantidadTexto);
+        
+        // Actualizar acción del formulario
+        $('#editForm').attr('action', '/edit_pro/' + id_producto);
+        
+        // Abrir el modal
+        $('#editModal').dialog('open');
+    });
+
+    // Mantener el código original para la eliminación
+    $(".eliminar").click(function (event) {
+        event.preventDefault();
+        var url = $(this).attr('href');
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "¿Estás seguro de que quieres eliminar?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar!',
+            cancelButtonText: 'No, cancelar!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = url;
+            }
+        });
     });
 });
+</script>
+<script>
+     $(document).ready(function() {
+            // Mostrar los productos
+            $('.producto-item').show();
+            
+            // Función para filtrar productos
+            function filtrarProductos() {
+                let filtroId = $('#filtro-id').val().toLowerCase();
+                let filtroNombre = $('#filtro-nombre').val().toLowerCase();
+                let filtroCategoria = $('#filtro-categoria').val().toLowerCase();
+                let filtroSubcategoria = $('#filtro-subcategoria').val().toLowerCase();
+                
+                $('.producto-item').each(function() {
+                    let id = $(this).find('.producto-id').text().toLowerCase();
+                    let nombre = $(this).find('.card-title').text().toLowerCase();
+                    let categoria = $(this).find('.producto-categoria').text().toLowerCase();
+                    
+                    let mostrar = 
+                        id.includes(filtroId) && 
+                        nombre.includes(filtroNombre) && 
+                        (filtroCategoria === '' || categoria.includes(filtroCategoria)) &&
+                        (filtroSubcategoria === '' || categoria.includes(filtroSubcategoria));
+                    
+                    $(this).toggle(mostrar);
+                });
+            }
+            
+            // Eventos para filtrar al escribir o cambiar selección
+            $('#filtro-id, #filtro-nombre').on('keyup', filtrarProductos);
+            $('#filtro-categoria, #filtro-subcategoria').on('change', filtrarProductos);
+            
+            // Generar opciones para filtros de categoría y subcategoría
+            let categorias = new Set();
+            let subcategorias = new Set();
+            
+            $('.producto-categoria .badge').each(function() {
+                let texto = $(this).text().trim();
+                if ($(this).hasClass('bg-primary')) {
+                    categorias.add(texto);
+                } else if ($(this).hasClass('bg-secondary')) {
+                    subcategorias.add(texto);
+                }
+            });
+            
+            // Agregar opciones a los selectores
+            categorias.forEach(function(categoria) {
+                $('#filtro-categoria').append(`<option value="${categoria}">${categoria}</option>`);
+            });
+            
+            subcategorias.forEach(function(subcategoria) {
+                $('#filtro-subcategoria').append(`<option value="${subcategoria}">${subcategoria}</option>`);
+            });
+            
+            // Inicializar tooltips
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+        });
 </script>
 {% endblock %}

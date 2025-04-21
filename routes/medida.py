@@ -181,8 +181,8 @@ def blusa():
 
         blusa = Blusa(id_cliente, largo_blusa, pecho, cintura, manga, puño, cuello)
         db["blusa"].insert_one(blusa.BlusaDBCollection())
-        flash("Medidas guardadas", "success")
-        return redirect(url_for('medidas.blusa'))
+        flash("Medidas de blusa guardada", "success")
+        return redirect(url_for('medidas.admedi'))
     else:
         id_cliente = session.get("id_cliente")
         return render_template('form/blusa.html', id_cliente=id_cliente)
@@ -212,8 +212,8 @@ def camisa():
 
         camisa = Camisa(id_cliente, largo_camisa, ancho_espalda, caida_hombro, largo_manga, puño, ancho_brazo, contorno_pecho, cintura, pecho, cuello)
         db["camisa"].insert_one(camisa.CamisaDBCollection())
-        flash("Medidas guardadas", "success")
-        return redirect(url_for('medidas.camisa'))
+        flash("Medidas de camisa guardada", "success")
+        return redirect(url_for('medidas.admedi'))
     else:
         id_cliente = session.get("id_cliente")
         return render_template('form/camisa.html', id_cliente=id_cliente)
@@ -235,9 +235,8 @@ def chaleco():
         
         chaleco = Chaleco(id_cliente, largo, cadera, escote)
         db["chaleco"].insert_one(chaleco.ChalecoDBCollection())
-        flash("Medidas guardadas", "success")
-        
-        return redirect(url_for('medidas.chaleco'))
+        flash("Medidas de chaleco guardada", "success")
+        return redirect(url_for('medidas.admedi'))
     else:
         id_cliente = session.get("id_cliente")
         return render_template('form/chaleco.html', id_cliente=id_cliente)
@@ -261,9 +260,8 @@ def falda():
         
         falda = Falda(id_cliente, largo_cadera, cintura, cadera, vuelo)
         db["falda"].insert_one(falda.FaldaDBCollection())
-        flash("Medidas guardadas", "success")
-        
-        return redirect(url_for('medidas.falda'))
+        flash("Medidas de falda guardada", "success")
+        return redirect(url_for('medidas.admedi'))
     else:
         id_cliente = session.get("id_cliente")
         return render_template('form/falda.html', id_cliente=id_cliente)
@@ -296,8 +294,8 @@ def leva():
 
         leva = Leva(id_cliente, espalda, largo_saco, ancho_espalda, media_espalda, caida_hombro, largo_manga, ancho_puño, ancho_brazo, cont_pecho, cintura, pecho, cuello)
         db["leva"].insert_one(leva.LevaDBCollection())
-        flash("Medidas guardadas", "success")
-        return redirect(url_for('medidas.leva'))
+        flash("Medidas de leva guardada", "success")
+        return redirect(url_for('medidas.admedi'))
     else:
         id_cliente = session.get("id_cliente")
         return render_template('form/leva.html', id_cliente=id_cliente)
@@ -325,8 +323,8 @@ def pantalon():
         
         pantalon = Pantalon(id_cliente, alto_rodilla, largo_pantalon, cintura, cadera, muslo, rodilla, basta, tiro)
         db["pantalon"].insert_one(pantalon.PantalonDBCollection())
-        flash("Medidas guardadas", "success")
-        return redirect(url_for('medidas.pantalon'))
+        flash("Medidas de pantalon guardada", "success")
+        return redirect(url_for('medidas.admedi'))
     else:
         id_cliente = session.get("id_cliente")
         return render_template('form/pantalon.html', id_cliente=id_cliente)
@@ -360,8 +358,8 @@ def saco():
         
         saco = Saco(id_cliente, talla_delantero, largo_saco, ancho_espalda, largo_manga, puño, ancho_brazo, cont_pecho, cont_cintura, pecho, alto_busto, distancia_busto, talla_espalda, media_espalda, escote)
         db["saco"].insert_one(saco.SacoDBCollection())
-        flash("Medidas guardadas", "success")
-        return redirect(url_for('medidas.saco'))
+        flash("Medidas de saco guardada", "success")
+        return redirect(url_for('medidas.admedi'))
     else:
         id_cliente = session.get("id_cliente")
         return render_template('form/saco.html', id_cliente=id_cliente)
