@@ -130,6 +130,12 @@
                                     <input class="form-control" placeholder="{{blusa.cuello}}" readonly>
                                 </div>
                                 <br>
+                                <form action="{{ url_for('medidas.generar_pdf_blusa') }}" method="get">
+                                    <input type="hidden" name="id_cliente" value="{{ cliente.id_cliente }}">
+                                    <button type="submit" class="btn btn-success mt-2">
+                                        Generar PDF
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -204,6 +210,12 @@
                                     <input class="form-control" placeholder="{{camisa.cuello}}" readonly>
                                 </div>
                                 <br>
+                                <form action="{{ url_for('medidas.generar_pdf_camisa') }}" method="get">
+                                    <input type="hidden" name="id_cliente" value="{{ cliente.id_cliente }}">
+                                    <button type="submit" class="btn btn-success mt-2">
+                                        Generar PDF
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -241,6 +253,12 @@
                                     <input class="form-control" placeholder="{{chaleco.escote}}" readonly>
                                 </div>
                                 <br>
+                                <form action="{{ url_for('medidas.generar_pdf_chaleco') }}" method="get">
+                                    <input type="hidden" name="id_cliente" value="{{ cliente.id_cliente }}">
+                                    <button type="submit" class="btn btn-success mt-2">
+                                        Generar PDF
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -279,6 +297,12 @@
                                     <input class="form-control" placeholder="{{falda.vuelo}}" readonly>
                                 </div>
                                 <br>
+                                <form action="{{ url_for('medidas.generar_pdf_falda') }}" method="get">
+                                    <input type="hidden" name="id_cliente" value="{{ cliente.id_cliente }}">
+                                    <button type="submit" class="btn btn-success mt-2">
+                                        Generar PDF
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -369,6 +393,12 @@
                                     <input class="form-control" placeholder="{{leva.cuello}}" readonly>
                                 </div>
                                 <br>
+                                <form action="{{ url_for('medidas.generar_pdf_leva') }}" method="get">
+                                    <input type="hidden" name="id_cliente" value="{{ cliente.id_cliente }}">
+                                    <button type="submit" class="btn btn-success mt-2">
+                                        Generar PDF
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -431,6 +461,12 @@
                                     <input class="form-control" placeholder="{{pantalon.tiro}}" readonly>
                                 </div>
                                 <br>
+                                <form action="{{ url_for('medidas.generar_pdf_pantalon') }}" method="get">
+                                    <input type="hidden" name="id_cliente" value="{{ cliente.id_cliente }}">
+                                    <button type="submit" class="btn btn-success mt-2">
+                                        Generar PDF
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -533,6 +569,12 @@
                                     <input class="form-control" placeholder="{{saco.escote}}" readonly>
                                 </div>
                                 <br>
+                                <form action="{{ url_for('medidas.generar_pdf_saco') }}" method="get">
+                                    <input type="hidden" name="id_cliente" value="{{ cliente.id_cliente }}">
+                                    <button type="submit" class="btn btn-success mt-2">
+                                        Generar PDF
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -543,18 +585,68 @@
         </div>
     </div>
     <script>
+        // Codigo para ocultar y mostrar las tablas de los datos 
+
+
         document.addEventListener("DOMContentLoaded", function () {
             let contentWrapper = document.getElementById("comprobar");
-            let containers = contentWrapper.querySelectorAll(".panel");
+            let rows = contentWrapper.querySelectorAll(".row");
+            let visiblePanels = [];
 
-            containers.forEach(container => {
-                let inputs = container.querySelectorAll("input");
-                let hasData = Array.from(inputs).some(input => input.placeholder.trim() !== ""); // Verifica si algún input tiene datos
+            // Primero identificamos todos los paneles con datos
+            rows.forEach(row => {
+                let panels = row.querySelectorAll(".col-md-6 .panel");
+                panels.forEach(panel => {
+                    let inputs = panel.querySelectorAll("input");
+                    let hasData = Array.from(inputs).some(input => input.placeholder.trim() !== "");
 
-                container.style.display = hasData ? "block" : "none"; // Muestra u oculta todo el contenedor
+                    if (hasData) {
+                        // Guardamos el panel completo con su columna contenedora
+                        visiblePanels.push(panel.closest(".col-md-6"));
+                    } else {
+                        // Ocultamos los paneles sin datos
+                        panel.closest(".col-md-6").style.display = "none";
+                    }
+                });
             });
-        });
 
+            // Si hay paneles visibles, los reorganizamos
+            if (visiblePanels.length > 0) {
+                // Creamos un nuevo contenedor para la reorganización
+                let container = document.createElement("div");
+                container.className = "container";
+
+                // Creamos filas para organizar dos paneles por fila
+                for (let i = 0; i < visiblePanels.length; i += 2) {
+                    let row = document.createElement("div");
+                    row.className = "row";
+
+                    // Añadimos el primer panel de la fila
+                    let panel1 = visiblePanels[i];
+                    panel1.style.display = "block";
+                    row.appendChild(panel1);
+
+                    // Añadimos el segundo panel si existe
+                    if (i + 1 < visiblePanels.length) {
+                        let panel2 = visiblePanels[i + 1];
+                        panel2.style.display = "block";
+                        row.appendChild(panel2);
+                    }
+
+                    container.appendChild(row);
+                }
+
+                // Reemplazamos el contenido original con nuestra nueva organización
+                let originalContainer = contentWrapper.querySelector(".container");
+
+                // Preservamos el encabezado original
+                let headerRow = originalContainer.querySelector(".row.pad-botm");
+                container.insertBefore(headerRow.cloneNode(true), container.firstChild);
+
+                // Reemplazamos el contenedor
+                contentWrapper.replaceChild(container, originalContainer);
+            }
+        });
 
     </script>
 </body>

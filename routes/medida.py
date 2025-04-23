@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, request, flash, session, redirect, url_for
+from datetime import datetime
+from flask import Blueprint, make_response, render_template, request, flash, session, redirect, url_for,send_file
 from controllers.database import Conexion as dbase
 from modules.medidas import Medida
 from pymongo import MongoClient
@@ -10,6 +11,14 @@ from modules.falda import Falda
 from modules.pantalon import Pantalon
 from modules.chaleco import Chaleco
 from modules.saco import Saco
+from reportlab.lib.pagesizes import A4 ,letter
+from reportlab.pdfgen import canvas
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
+import io
+from io import BytesIO
+
 db = dbase()
 
 medidas = Blueprint('medidas', __name__)
@@ -187,6 +196,84 @@ def blusa():
         id_cliente = session.get("id_cliente")
         return render_template('form/blusa.html', id_cliente=id_cliente)
 
+# PDF para ver las medidas de blusa 
+@medidas.route("/generar_pdf_blusa", methods=['GET'])
+def generar_pdf_blusa():
+    # Obtener el ID del cliente desde el parámetro GET
+    id_cliente = request.args.get('id_cliente')
+    
+    if not id_cliente:
+        flash("ID de cliente no proporcionado", "alert")
+        return redirect(url_for('medidas.v_admedi'))
+    
+    # Obtener los datos de la blusa desde MongoDB
+    blusa_data = db["blusa"].find_one({"id_cliente": id_cliente})
+    
+    if not blusa_data:
+        flash("No se encontraron datos de blusa para este cliente", "alert")
+        return redirect(url_for('medidas.v_medi', id_cliente=id_cliente))
+    
+    # Obtener datos del cliente para el encabezado
+    cliente_data = db["cliente"].find_one({"id_cliente": id_cliente})
+    nombre_cliente = cliente_data.get("nombre", "Cliente") if cliente_data else "Cliente"
+    
+    # Crear el documento PDF en memoria
+    pdf_buffer = BytesIO()
+    doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
+    elements = []
+    
+    # Añadir título
+    styles = getSampleStyleSheet()
+    elements.append(Paragraph(f"Medidas de Blusa - {nombre_cliente}", styles['Heading1']))
+    elements.append(Paragraph(f"ID Cliente: {id_cliente}", styles['Heading2']))
+    
+    # Preparar los datos para la tabla
+    data = [
+        ["Campo", "Medida"],
+        ["Largo Blusa", blusa_data["largo_blusa"] + " cm"],
+        ["Pecho", blusa_data["pecho"] + " cm"],
+        ["Cintura", blusa_data["cintura"] + " cm"],
+        ["Manga", blusa_data["manga"] + " cm"],
+        ["Puño", blusa_data["puño"] + " cm"],
+        ["Cuello", blusa_data["cuello"] + " cm"]
+    ]
+    
+    # Crear la tabla
+    table = Table(data, colWidths=[200, 200])
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (1, 0), colors.black),
+        ('TEXTCOLOR', (0, 0), (1, 0), colors.white),
+        ('ALIGN', (0, 0), (1, 0), 'CENTER'),
+        ('FONTNAME', (0, 0), (1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (1, 0), 14),
+        ('BOTTOMPADDING', (0, 0), (1, 0), 12),
+        ('BACKGROUND', (0, 1), (1, -1), colors.white),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('BOX', (0, 0), (-1, -1), 2, colors.black),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('ALIGN', (0, 0), (0, -1), 'LEFT'),
+        ('ALIGN', (1, 0), (1, -1), 'CENTER'),
+    ]))
+    
+    elements.append(table)
+    
+    # Añadir fecha de generación
+    elements.append(Paragraph(f"Generado: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}", styles['Normal']))
+    
+    # Construir el PDF
+    doc.build(elements)
+    
+    # Regresar al inicio del buffer
+    pdf_buffer.seek(0)
+    
+    # Enviar el archivo directamente como respuesta
+    return send_file(
+        pdf_buffer,
+        as_attachment=True,
+        download_name=f"medidas_blusa_{id_cliente}.pdf",
+        mimetype='application/pdf'
+    )
+
 # Medidas de camisa
 @medidas.route("/form/camisa",methods=['GET','POST'])
 def camisa():
@@ -217,7 +304,92 @@ def camisa():
     else:
         id_cliente = session.get("id_cliente")
         return render_template('form/camisa.html', id_cliente=id_cliente)
- 
+
+# Generar pdf de camisa
+@medidas.route("/generar_pdf_camisa", methods=['GET'])
+def generar_pdf_camisa():
+    # Obtener el ID del cliente desde el parámetro GET
+    id_cliente = request.args.get('id_cliente')
+    
+    if not id_cliente:
+        flash("ID de cliente no proporcionado", "alert")
+        return redirect(url_for('medidas.v_admedi'))
+    
+    # Obtener los datos de la camisa desde MongoDB
+    camisa_data = db["camisa"].find_one({"id_cliente": id_cliente})
+    
+    if not camisa_data:
+        flash("No se encontraron datos de camisa para este cliente", "alert")
+        return redirect(url_for('medidas.v_medi', id_cliente=id_cliente))
+    
+    # Obtener datos del cliente para el encabezado
+    cliente_data = db["cliente"].find_one({"id_cliente": id_cliente})
+    nombre_cliente = cliente_data.get("nombre", "Cliente") if cliente_data else "Cliente"
+    
+    # Crear el documento PDF en memoria
+    pdf_buffer = BytesIO()
+    doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
+    elements = []
+    
+    # Añadir título
+    styles = getSampleStyleSheet()
+    elements.append(Paragraph(f"Medidas de camisa - {nombre_cliente}", styles['Heading1']))
+    elements.append(Paragraph(f"ID Cliente: {id_cliente}", styles['Heading2']))
+    
+    # Preparar los datos para la tabla
+    data = [
+        ["Campo", "Medida"],
+        ["Largo camisa", camisa_data["largo_camisa"] + " cm"],
+        ["Ancho de espalda", camisa_data["ancho_espalda"] + " cm"],
+        ["Caida de hombro", camisa_data["caida_hombro"] + " cm"],
+        ["Largo de manga", camisa_data["largo_manga"] + " cm"],
+        ["Puño", camisa_data["puño"] + " cm"],
+        ["Ancho de brazo", camisa_data["ancho_brazo"] + " cm"],
+        ["Contorno de pecho", camisa_data["contorno_pecho"] + " cm"],
+        ["Cintura", camisa_data["cintura"] + " cm"],
+        ["Pecho", camisa_data["pecho"] + " cm"],
+        ["Cuello", camisa_data["cuello"] + " cm"],
+    ]
+    
+    # Crear la tabla
+    table = Table(data, colWidths=[200, 200])
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (1, 0), colors.black),
+        ('TEXTCOLOR', (0, 0), (1, 0), colors.white),
+        ('ALIGN', (0, 0), (1, 0), 'CENTER'),
+        ('FONTNAME', (0, 0), (1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (1, 0), 14),
+        ('BOTTOMPADDING', (0, 0), (1, 0), 12),
+        ('BACKGROUND', (0, 1), (1, -1), colors.white),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('BOX', (0, 0), (-1, -1), 2, colors.black),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('ALIGN', (0, 0), (0, -1), 'LEFT'),
+        ('ALIGN', (1, 0), (1, -1), 'CENTER'),
+    ]))
+    
+    elements.append(table)
+    
+    # Añadir fecha de generación
+    elements.append(Paragraph(f"Generado: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}", styles['Normal']))
+    
+    # Construir el PDF
+    doc.build(elements)
+    
+    # Regresar al inicio del buffer
+    pdf_buffer.seek(0)
+    
+    # Enviar el archivo directamente como respuesta
+    return send_file(
+        pdf_buffer,
+        as_attachment=True,
+        download_name=f"medidas_camisa_{id_cliente}.pdf",
+        mimetype='application/pdf'
+    )
+
+
+
+
 # Medidas de chaleco
 @medidas.route("/form/chaleco",methods=['GET','POST'])
 def chaleco():
@@ -240,6 +412,82 @@ def chaleco():
     else:
         id_cliente = session.get("id_cliente")
         return render_template('form/chaleco.html', id_cliente=id_cliente)
+
+# PDF en chaleco
+@medidas.route("/generar_pdf_chaleco", methods=['GET'])
+def generar_pdf_chaleco():
+    # Obtener el ID del cliente desde el parámetro GET
+    id_cliente = request.args.get('id_cliente')
+    
+    if not id_cliente:
+        flash("ID de cliente no proporcionado", "alert")
+        return redirect(url_for('medidas.v_admedi'))
+    
+    # Obtener los datos de la chaleco desde MongoDB
+    chaleco_data = db["chaleco"].find_one({"id_cliente": id_cliente})
+    
+    if not chaleco_data:
+        flash("No se encontraron datos de chaleco para este cliente", "alert")
+        return redirect(url_for('medidas.v_medi', id_cliente=id_cliente))
+    
+    # Obtener datos del cliente para el encabezado
+    cliente_data = db["cliente"].find_one({"id_cliente": id_cliente})
+    nombre_cliente = cliente_data.get("nombre", "Cliente") if cliente_data else "Cliente"
+    
+    # Crear el documento PDF en memoria
+    pdf_buffer = BytesIO()
+    doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
+    elements = []
+    
+    # Añadir título
+    styles = getSampleStyleSheet()
+    elements.append(Paragraph(f"Medidas de chaleco - {nombre_cliente}", styles['Heading1']))
+    elements.append(Paragraph(f"ID Cliente: {id_cliente}", styles['Heading2']))
+    
+    # Preparar los datos para la tabla
+    data = [
+        ["Campo", "Medida"],
+        ["Largo", chaleco_data["largo"] + " cm"],
+        ["Cadera", chaleco_data["cadera"] + " cm"],
+        ["Escote", chaleco_data["escote"] + " cm"]
+    ]
+    
+    # Crear la tabla
+    table = Table(data, colWidths=[200, 200])
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (1, 0), colors.black),
+        ('TEXTCOLOR', (0, 0), (1, 0), colors.white),
+        ('ALIGN', (0, 0), (1, 0), 'CENTER'),
+        ('FONTNAME', (0, 0), (1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (1, 0), 14),
+        ('BOTTOMPADDING', (0, 0), (1, 0), 12),
+        ('BACKGROUND', (0, 1), (1, -1), colors.white),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('BOX', (0, 0), (-1, -1), 2, colors.black),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('ALIGN', (0, 0), (0, -1), 'LEFT'),
+        ('ALIGN', (1, 0), (1, -1), 'CENTER'),
+    ]))
+    
+    elements.append(table)
+    
+    # Añadir fecha de generación
+    elements.append(Paragraph(f"Generado: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}", styles['Normal']))
+    
+    # Construir el PDF
+    doc.build(elements)
+    
+    # Regresar al inicio del buffer
+    pdf_buffer.seek(0)
+    
+    # Enviar el archivo directamente como respuesta
+    return send_file(
+        pdf_buffer,
+        as_attachment=True,
+        download_name=f"medidas_chaleco_{id_cliente}.pdf",
+        mimetype='application/pdf'
+    )
+
 
 # Medidas de Falda
 @medidas.route("/form/falda",methods=['GET','POST'])
@@ -265,6 +513,85 @@ def falda():
     else:
         id_cliente = session.get("id_cliente")
         return render_template('form/falda.html', id_cliente=id_cliente)
+        
+# Generar PDF falda
+
+@medidas.route("/generar_pdf_falda", methods=['GET'])
+def generar_pdf_falda():
+    # Obtener el ID del cliente desde el parámetro GET
+    id_cliente = request.args.get('id_cliente')
+    
+    if not id_cliente:
+        flash("ID de cliente no proporcionado", "alert")
+        return redirect(url_for('medidas.v_admedi'))
+    
+    # Obtener los datos de la falda desde MongoDB
+    falda_data = db["falda"].find_one({"id_cliente": id_cliente})
+    
+    if not falda_data:
+        flash("No se encontraron datos de falda para este cliente", "alert")
+        return redirect(url_for('medidas.v_medi', id_cliente=id_cliente))
+    
+    # Obtener datos del cliente para el encabezado
+    cliente_data = db["cliente"].find_one({"id_cliente": id_cliente})
+    nombre_cliente = cliente_data.get("nombre", "Cliente") if cliente_data else "Cliente"
+    
+    # Crear el documento PDF en memoria
+    pdf_buffer = BytesIO()
+    doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
+    elements = []
+    
+    # Añadir título
+    styles = getSampleStyleSheet()
+    elements.append(Paragraph(f"Medidas de falda - {nombre_cliente}", styles['Heading1']))
+    elements.append(Paragraph(f"ID Cliente: {id_cliente}", styles['Heading2']))
+    
+    # Preparar los datos para la tabla
+    data = [
+        ["Campo", "Medida"],
+        ["Largo de cadera", falda_data["largo_cadera"] + " cm"],
+        ["Cintura", falda_data["cintura"] + " cm"],
+        ["Cadera", falda_data["cadera"] + " cm"],
+        ["Vuelo", falda_data["vuelo"] + " cm"]
+    ]
+    
+    # Crear la tabla
+    table = Table(data, colWidths=[200, 200])
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (1, 0), colors.black),
+        ('TEXTCOLOR', (0, 0), (1, 0), colors.white),
+        ('ALIGN', (0, 0), (1, 0), 'CENTER'),
+        ('FONTNAME', (0, 0), (1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (1, 0), 14),
+        ('BOTTOMPADDING', (0, 0), (1, 0), 12),
+        ('BACKGROUND', (0, 1), (1, -1), colors.white),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('BOX', (0, 0), (-1, -1), 2, colors.black),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('ALIGN', (0, 0), (0, -1), 'LEFT'),
+        ('ALIGN', (1, 0), (1, -1), 'CENTER'),
+    ]))
+    
+    elements.append(table)
+    
+    # Añadir fecha de generación
+    elements.append(Paragraph(f"Generado: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}", styles['Normal']))
+    
+    # Construir el PDF
+    doc.build(elements)
+    
+    # Regresar al inicio del buffer
+    pdf_buffer.seek(0)
+    
+    # Enviar el archivo directamente como respuesta
+    return send_file(
+        pdf_buffer,
+        as_attachment=True,
+        download_name=f"medidas_falda_{id_cliente}.pdf",
+        mimetype='application/pdf'
+    )
+
+
 
 # Medidas de Leva
 @medidas.route("/form/leva",methods=['GET','POST'])
@@ -300,6 +627,90 @@ def leva():
         id_cliente = session.get("id_cliente")
         return render_template('form/leva.html', id_cliente=id_cliente)
 
+# PDF de leva
+@medidas.route("/generar_pdf_leva", methods=['GET'])
+def generar_pdf_leva():
+    # Obtener el ID del cliente desde el parámetro GET
+    id_cliente = request.args.get('id_cliente')
+    
+    if not id_cliente:
+        flash("ID de cliente no proporcionado", "alert")
+        return redirect(url_for('medidas.v_admedi'))
+    
+    # Obtener los datos de la leva desde MongoDB
+    leva_data = db["leva"].find_one({"id_cliente": id_cliente})
+    
+    if not leva_data:
+        flash("No se encontraron datos de leva para este cliente", "alert")
+        return redirect(url_for('medidas.v_medi', id_cliente=id_cliente))
+    
+    # Obtener datos del cliente para el encabezado
+    cliente_data = db["cliente"].find_one({"id_cliente": id_cliente})
+    nombre_cliente = cliente_data.get("nombre", "Cliente") if cliente_data else "Cliente"
+    
+    # Crear el documento PDF en memoria
+    pdf_buffer = BytesIO()
+    doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
+    elements = []
+    
+    # Añadir título
+    styles = getSampleStyleSheet()
+    elements.append(Paragraph(f"Medidas de leva - {nombre_cliente}", styles['Heading1']))
+    elements.append(Paragraph(f"ID Cliente: {id_cliente}", styles['Heading2']))
+    
+    # Preparar los datos para la tabla
+    data = [
+        ["Campo", "Medida"],
+        ["Espalda", leva_data["espalda"] + " cm"],
+        ["Largo de saco", leva_data["largo_saco"] + " cm"],
+        ["Ancho de espalda", leva_data["ancho_espalda"] + " cm"],
+        ["Media de espalda", leva_data["media_espalda"] + " cm"],
+        ["Caida de hombro", leva_data["caida_hombro"] + " cm"],
+        ["Largo de manga", leva_data["largo_manga"] + " cm"],
+        ["Ancho de puño", leva_data["ancho_puño"] + " cm"],
+        ["Ancho de brazo", leva_data["ancho_brazo"] + " cm"],
+        ["Cont de pecho", leva_data["cont_pecho"] + " cm"],
+        ["Cintura", leva_data["cintura"] + " cm"],
+        ["Pecho", leva_data["pecho"] + " cm"],
+        ["Cuello", leva_data["cuello"] + " cm"]
+    ]
+    
+    # Crear la tabla
+    table = Table(data, colWidths=[200, 200])
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (1, 0), colors.black),
+        ('TEXTCOLOR', (0, 0), (1, 0), colors.white),
+        ('ALIGN', (0, 0), (1, 0), 'CENTER'),
+        ('FONTNAME', (0, 0), (1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (1, 0), 14),
+        ('BOTTOMPADDING', (0, 0), (1, 0), 12),
+        ('BACKGROUND', (0, 1), (1, -1), colors.white),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('BOX', (0, 0), (-1, -1), 2, colors.black),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('ALIGN', (0, 0), (0, -1), 'LEFT'),
+        ('ALIGN', (1, 0), (1, -1), 'CENTER'),
+    ]))
+    
+    elements.append(table)
+    
+    # Añadir fecha de generación
+    elements.append(Paragraph(f"Generado: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}", styles['Normal']))
+    
+    # Construir el PDF
+    doc.build(elements)
+    
+    # Regresar al inicio del buffer
+    pdf_buffer.seek(0)
+    
+    # Enviar el archivo directamente como respuesta
+    return send_file(
+        pdf_buffer,
+        as_attachment=True,
+        download_name=f"medidas_leva_{id_cliente}.pdf",
+        mimetype='application/pdf'
+    )
+
 # Medidas de Pantalon
 @medidas.route("/form/pantalon",methods=['GET','POST'])
 def pantalon():
@@ -328,13 +739,97 @@ def pantalon():
     else:
         id_cliente = session.get("id_cliente")
         return render_template('form/pantalon.html', id_cliente=id_cliente)
+
+# PDF de pantalon
+
+@medidas.route("/generar_pdf_pantalon", methods=['GET'])
+def generar_pdf_pantalon():
+    # Obtener el ID del cliente desde el parámetro GET
+    id_cliente = request.args.get('id_cliente')
+    
+    if not id_cliente:
+        flash("ID de cliente no proporcionado", "alert")
+        return redirect(url_for('medidas.v_admedi'))
+    
+    # Obtener los datos de la pantalon desde MongoDB
+    pantalon_data = db["pantalon"].find_one({"id_cliente": id_cliente})
+    
+    if not pantalon_data:
+        flash("No se encontraron datos de pantalon para este cliente", "alert")
+        return redirect(url_for('medidas.v_medi', id_cliente=id_cliente))
+    
+    # Obtener datos del cliente para el encabezado
+    cliente_data = db["cliente"].find_one({"id_cliente": id_cliente})
+    nombre_cliente = cliente_data.get("nombre", "Cliente") if cliente_data else "Cliente"
+    
+    # Crear el documento PDF en memoria
+    pdf_buffer = BytesIO()
+    doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
+    elements = []
+    
+    # Añadir título
+    styles = getSampleStyleSheet()
+    elements.append(Paragraph(f"Medidas de pantalon - {nombre_cliente}", styles['Heading1']))
+    elements.append(Paragraph(f"ID Cliente: {id_cliente}", styles['Heading2']))
+    
+    # Preparar los datos para la tabla
+    data = [
+        ["Campo", "Medida"],
+        ["Alto de rodilla", pantalon_data["alto_rodilla"] + " cm"],
+        ["Largo de pantalon", pantalon_data["largo_pantalon"] + " cm"],
+        ["Cintura", pantalon_data["cintura"] + " cm"],
+        ["Cadera", pantalon_data["cadera"] + " cm"],
+        ["Muslo", pantalon_data["muslo"] + " cm"],
+        ["Rodilla", pantalon_data["rodilla"] + " cm"],
+        ["Basta", pantalon_data["basta"] + " cm"],
+        ["Tiro", pantalon_data["tiro"] + " cm"]
+    ]
+    
+    # Crear la tabla
+    table = Table(data, colWidths=[200, 200])
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (1, 0), colors.black),
+        ('TEXTCOLOR', (0, 0), (1, 0), colors.white),
+        ('ALIGN', (0, 0), (1, 0), 'CENTER'),
+        ('FONTNAME', (0, 0), (1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (1, 0), 14),
+        ('BOTTOMPADDING', (0, 0), (1, 0), 12),
+        ('BACKGROUND', (0, 1), (1, -1), colors.white),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('BOX', (0, 0), (-1, -1), 2, colors.black),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('ALIGN', (0, 0), (0, -1), 'LEFT'),
+        ('ALIGN', (1, 0), (1, -1), 'CENTER'),
+    ]))
+    
+    elements.append(table)
+    
+    # Añadir fecha de generación
+    elements.append(Paragraph(f"Generado: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}", styles['Normal']))
+    
+    # Construir el PDF
+    doc.build(elements)
+    
+    # Regresar al inicio del buffer
+    pdf_buffer.seek(0)
+    
+    # Enviar el archivo directamente como respuesta
+    return send_file(
+        pdf_buffer,
+        as_attachment=True,
+        download_name=f"medidas_pantalon_{id_cliente}.pdf",
+        mimetype='application/pdf'
+    )
+
+
 # Medidas de Saco
+
 @medidas.route("/form/saco",methods=['GET','POST'])
 def saco():
     if request.method == "POST":
         saco = db["saco"]
         id_cliente = request.form["id_cliente"]
-        talla_delantero = request.form["talla_delantero"]
+        talla_dealntero = request.form["talla_dealntero"]
         largo_saco = request.form["largo_saco"]
         ancho_espalda = request.form["ancho_espalda"]
         largo_manga = request.form["largo_manga"]
@@ -364,3 +859,92 @@ def saco():
         id_cliente = session.get("id_cliente")
         return render_template('form/saco.html', id_cliente=id_cliente)
                     
+
+# PDF DE SACO
+@medidas.route("/generar_pdf_saco", methods=['GET'])
+def generar_pdf_saco():
+    # Obtener el ID del cliente desde el parámetro GET
+    id_cliente = request.args.get('id_cliente')
+    
+    if not id_cliente:
+        flash("ID de cliente no proporcionado", "alert")
+        return redirect(url_for('medidas.v_admedi'))
+    
+    # Obtener los datos de la saco desde MongoDB
+    saco_data = db["saco"].find_one({"id_cliente": id_cliente})
+    
+    if not saco_data:
+        flash("No se encontraron datos de saco para este cliente", "alert")
+        return redirect(url_for('medidas.v_medi', id_cliente=id_cliente))
+    
+    # Obtener datos del cliente para el encabezado
+    cliente_data = db["cliente"].find_one({"id_cliente": id_cliente})
+    nombre_cliente = cliente_data.get("nombre", "Cliente") if cliente_data else "Cliente"
+    
+    # Crear el documento PDF en memoria
+    pdf_buffer = BytesIO()
+    doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
+    elements = []
+    
+    # Añadir título
+    styles = getSampleStyleSheet()
+    elements.append(Paragraph(f"Medidas de saco - {nombre_cliente}", styles['Heading1']))
+    elements.append(Paragraph(f"ID Cliente: {id_cliente}", styles['Heading2']))
+    
+    # Preparar los datos para la tabla
+    data = [
+        ["Campo", "Medida"],
+        ["Talla delantero", saco_data["talla_dealntero"] + " cm"],
+        ["Largo de saco", saco_data["largo_saco"] + " cm"],
+        ["Ancho de espalda", saco_data["ancho_espalda"] + " cm"],
+        ["Largo de manga", saco_data["largo_manga"] + " cm"],
+        ["Puño", saco_data["puño"] + " cm"],
+        ["Ancho de brazo", saco_data["ancho_brazo"] + " cm"],
+        ["Cont de pecho", saco_data["cont_pecho"] + " cm"],
+        ["Cont de cintura", saco_data["cont_cintura"] + " cm"],
+        ["Pecho", saco_data["pecho"] + " cm"],
+        ["Alto de busto", saco_data["alto_busto"] + " cm"],
+        ["Distancia de busto", saco_data["distancia_busto"] + " cm"],
+        ["Talla de espalda", saco_data["talla_espalda"] + " cm"],
+        ["Media de espalda", saco_data["media_espalda"] + " cm"],
+        ["Escote", saco_data["escote"] + " cm"],
+        
+        #distancia_busto
+        
+    ]
+    
+    # Crear la tabla
+    table = Table(data, colWidths=[200, 200])
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (1, 0), colors.black),
+        ('TEXTCOLOR', (0, 0), (1, 0), colors.white),
+        ('ALIGN', (0, 0), (1, 0), 'CENTER'),
+        ('FONTNAME', (0, 0), (1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (1, 0), 14),
+        ('BOTTOMPADDING', (0, 0), (1, 0), 12),
+        ('BACKGROUND', (0, 1), (1, -1), colors.white),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),
+        ('BOX', (0, 0), (-1, -1), 2, colors.black),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('ALIGN', (0, 0), (0, -1), 'LEFT'),
+        ('ALIGN', (1, 0), (1, -1), 'CENTER'),
+    ]))
+    
+    elements.append(table)
+    
+    # Añadir fecha de generación
+    elements.append(Paragraph(f"Generado: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}", styles['Normal']))
+    
+    # Construir el PDF
+    doc.build(elements)
+    
+    # Regresar al inicio del buffer
+    pdf_buffer.seek(0)
+    
+    # Enviar el archivo directamente como respuesta
+    return send_file(
+        pdf_buffer,
+        as_attachment=True,
+        download_name=f"medidas_saco_{id_cliente}.pdf",
+        mimetype='application/pdf'
+    )

@@ -1,12 +1,9 @@
 {% extends "form/layout.html" %}
 {% block content %}
-<style>
-    
-</style>
+<link rel="stylesheet" href="/static/css/formularios.css">
 <div class="container py-5">
-    <div class="row py-5">
+    <div class="row py-5 main-container" >
         <!-- /. ROW  -->
-
         <form class="col-md-9 m-auto" action="/form/blusa" method="post" role="form">
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -18,6 +15,11 @@
             {% endif %}
             {% endwith %}
             <div class="row">
+                <div class="product-image">
+                    <div class="circle-bg">
+                        <img src="/static/img/blusa.png" alt="Productos para el cuidado de la piel"   >
+                    </div>
+                </div>
                 <div class="form-group col-md-6 mb-3" hidden>
 
                     <label for="inputemail">id Cliente</label>
@@ -57,7 +59,19 @@
             
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <button type="submit" class="btn btn-success btn-lg px-3">Guardar medida</button>
+                    <button type="submit" class="btn btn-success btn-lg px-3">
+                        <u>
+                            Guardar medida
+                        </u>
+                       </button>
+                    <button type="button" class="btn btn-success btn-lg px-3">
+                        <a href="/cliente/in_medida " class="  btn-success btn-lg px-3" > 
+                            <strong>
+                                Regresar
+                            </strong>
+                             </a>
+                    </button>
+                    
                 </div>
             </div>
         </form>
@@ -99,4 +113,5 @@
         });
     });
 </script>
+
 {% endblock %}

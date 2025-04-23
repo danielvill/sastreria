@@ -17,7 +17,7 @@ from routes.pedido import pedido
 from routes.h_pedido import h_pedido
 from routes.medida import medidas
 from routes.carrito import carrito
-
+from routes.chart import chart
 
 db = dbase()
 app = Flask(__name__)
@@ -85,7 +85,7 @@ def login():
         cliente = db.cliente.find_one({'user':usuario,'contraseña':password})
         if usuario_fo:
             session["username"] = usuario
-            return redirect(url_for('cliente.v_cli'))
+            return redirect(url_for('chart.dasbor'))
         elif cliente:
             session["username"] = cliente['user']
             session["id_cliente"] = cliente['id_cliente']  # Guardar id_cliente en la sesión
@@ -118,6 +118,10 @@ app.register_blueprint(h_pedido)
 
 # Codigo de ingreso para el cliente 
 app.register_blueprint(medidas)
+
+# Codigo de ingreso para chart 
+app.register_blueprint(chart)
+
 
 @app.errorhandler(404)
 def notFound(error=None):

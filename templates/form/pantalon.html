@@ -1,5 +1,7 @@
 {% extends "form/layout.html" %}
 {% block content %}
+<link rel="stylesheet" href="/static/css/formularios.css">
+
 <div class="container py-5">
     <div class="row py-5">
         <!-- /. ROW  -->
@@ -15,6 +17,11 @@
             {% endif %}
             {% endwith %}
             <div class="row">
+                <div class="product-image">
+                    <div class="circle-bg">
+                        <img src="/static/img/pantalon.jpg" alt="Productos para el cuidado de la piel">
+                    </div>
+                </div>
                 <div class="form-group col-md-6 mb-3" hidden>
                     <label for="inputemail">id Cliente</label>
                     <input type="text" class="form-control mt-1" name="id_cliente" value="{{id_cliente}}"
@@ -63,7 +70,18 @@
             <br>
             <div class="row">
                 <div class="col-md-6 mb-3">
-                    <button type="submit" class="btn btn-success btn-lg px-3">Guardar medida</button>
+                    <button type="submit" class="btn btn-success btn-lg px-3">
+                        <u>
+                            Guardar medida
+                        </u>
+                    </button>
+                    <button type="button" class="btn btn-success btn-lg px-3">
+                        <a href="/cliente/in_medida " class="  btn-success btn-lg px-3">
+                            <strong>
+                                Regresar
+                            </strong>
+                        </a>
+                    </button>
                 </div>
             </div>
         </form>

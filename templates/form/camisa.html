@@ -1,9 +1,10 @@
 {% extends "form/layout.html" %}
 {% block content %}
-<div class="container py-5">
+<link rel="stylesheet" href="/static/css/formularios.css">
+<div class="container py-5 ">
     <div class="row py-5">
         <!-- /. ROW  -->
-        
+
         <form class="col-md-9 m-auto" action="/form/camisa" method="post" role="form">
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -15,31 +16,36 @@
             {% endif %}
             {% endwith %}
             <div class="row">
+                <div class="product-image">
+                    <div class="circle-bg">
+                        <img src="/static/img/camisaroja.jpg" alt="Productos para el cuidado de la piel">
+                    </div>
+                </div>
                 <div class="form-group col-md-6 mb-3" hidden>
-                    
+
                     <label for="inputemail">id Cliente</label>
-                    <input type="text" class="form-control mt-1"  name="id_cliente" value="{{id_cliente}}"
+                    <input type="text" class="form-control mt-1" name="id_cliente" value="{{id_cliente}}"
                         placeholder="medida en cm">
                 </div>
-                <div class="form-group  col-md-6 mb-3" >
+                <div class="form-group  col-md-6 mb-3">
                     <label for="inputemail">Largo de Camisa</label>
-                    <input type="text" class="form-control mt-1"  name="largo_camisa" 
-                        placeholder="medida en cm">
+                    <input type="text" class="form-control mt-1" name="largo_camisa" placeholder="medida en cm">
                 </div>
                 <br>
                 <div class=" col-md-6 mb-3">
                     <label for="inputemail">Ancho de Espalda</label>
-                    <input type="number" class="form-control mt-1"  name="ancho_espalda" placeholder="medida en cm"
+                    <input type="number" class="form-control mt-1" name="ancho_espalda" placeholder="medida en cm"
                         rows="8">
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="inputsubject">Caida de Hombro</label>
-                    <input type="number" class="form-control mt-1" id="cintura" name="caida_hombro" placeholder="medida en cm" required>
+                    <input type="number" class="form-control mt-1" id="cintura" name="caida_hombro"
+                        placeholder="medida en cm" required>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="inputmessage">Largo de manga</label>
-                    <input type="number" class="form-control mt-1" id="largo_manga" name="largo_manga" placeholder="medida en cm"
-                        rows="8" required></input>
+                    <input type="number" class="form-control mt-1" id="largo_manga" name="largo_manga"
+                        placeholder="medida en cm" rows="8" required></input>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="inputmessage">Puño</label>
@@ -48,18 +54,18 @@
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="inputmessage">Ancho_brazo</label>
-                    <input type="number" class="form-control mt-1" id="ancho_brazo" name="ancho_brazo" placeholder="medida en cm"
-                        rows="8" required></input>
+                    <input type="number" class="form-control mt-1" id="ancho_brazo" name="ancho_brazo"
+                        placeholder="medida en cm" rows="8" required></input>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="inputmessage">Contorno_pecho</label>
-                    <input type="number" class="form-control mt-1" id="contorno_pecho" name="contorno_pecho" placeholder="medida en cm"
-                        rows="8" required></input>
+                    <input type="number" class="form-control mt-1" id="contorno_pecho" name="contorno_pecho"
+                        placeholder="medida en cm" rows="8" required></input>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="inputmessage">Cintura</label>
-                    <input type="number" class="form-control mt-1" id="cintura" name="cintura" placeholder="medida en cm"
-                        rows="8" required></input>
+                    <input type="number" class="form-control mt-1" id="cintura" name="cintura"
+                        placeholder="medida en cm" rows="8" required></input>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="inputmessage">Pecho</label>
@@ -73,9 +79,20 @@
                 </div>
             </div>
             <br>
-            <div class="row">   
+            <div class="row">
                 <div class="col-md-6 mb-3">
-                    <button type="submit" class="btn btn-success btn-lg px-3">Guardar medida</button>
+                    <button type="submit" class="btn btn-success btn-lg px-3">
+                        <u>
+                            Guardar medida
+                        </u>
+                    </button>
+                    <button type="button" class="btn btn-success btn-lg px-3">
+                        <a href="/cliente/in_medida " class="  btn-success btn-lg px-3">
+                            <strong>
+                                Regresar
+                            </strong>
+                        </a>
+                    </button>
                 </div>
             </div>
         </form>
@@ -83,39 +100,39 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    // Seleccionar todos los inputs de tipo number en el formulario
-    const inputs = document.querySelectorAll('input[type="number"]');
+    document.addEventListener('DOMContentLoaded', function () {
+        // Seleccionar todos los inputs de tipo number en el formulario
+        const inputs = document.querySelectorAll('input[type="number"]');
 
-    inputs.forEach(input => {
-        input.addEventListener('input', function(e) {
-            // Validar que no se ingresen valores negativos
-            if (this.value < 0) {
-                e.preventDefault();
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: '¡No se permiten valores negativos!'
-                });
-                this.value = '';
-            }
+        inputs.forEach(input => {
+            input.addEventListener('input', function (e) {
+                // Validar que no se ingresen valores negativos
+                if (this.value < 0) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: '¡No se permiten valores negativos!'
+                    });
+                    this.value = '';
+                }
 
-            // Validar que solo se ingresen números y un punto decimal
-            const value = this.value;
-            const regex = /^\d*\.?\d*$/;
+                // Validar que solo se ingresen números y un punto decimal
+                const value = this.value;
+                const regex = /^\d*\.?\d*$/;
 
-            if (!regex.test(value)) {
-                e.preventDefault();
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Por favor, ingresa un número válido. Solo se permiten números y un punto decimal.'
-                });
-                this.value = value.substr(0, value.length - 1);
-            }
+                if (!regex.test(value)) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Por favor, ingresa un número válido. Solo se permiten números y un punto decimal.'
+                    });
+                    this.value = value.substr(0, value.length - 1);
+                }
+            });
         });
     });
-});
 </script>
 
 {% endblock %}

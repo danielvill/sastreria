@@ -1,0 +1,189 @@
+{% extends "admin/layout.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-md-3 col-sm-3 col-xs-6">
+        <div class=" alert-success back-widget-set text-center animate__animated animate__heartBeat">
+            <svg xmlns="http://www.w3.org/2000/svg" width="62" height="62" fill="currentColor" class="bi bi-person-fill"
+                viewBox="0 0 16 16">
+                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+            </svg>
+            <h3>Total : {{ total_clientes }}</h3>
+            Cantidad de clientes
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-3 col-xs-6">
+        <div class=" alert-success back-widget-set text-center animate__animated animate__heartBeat">
+            <svg xmlns="http://www.w3.org/2000/svg" width="62" height="62" fill="currentColor" class="bi bi-shop-window"
+                viewBox="0 0 16 16">
+                <path
+                    d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.37 2.37 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0M1.5 8.5A.5.5 0 0 1 2 9v6h12V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5m2 .5a.5.5 0 0 1 .5.5V13h8V9.5a.5.5 0 0 1 1 0V13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5a.5.5 0 0 1 .5-.5" />
+            </svg>
+            <h3>Total : {{ total_productos }}</h3>
+            Cantidad de productos
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-3 col-xs-6">
+        <div class=" alert-warning back-widget-set text-center animate__animated animate__heartBeat">
+            <svg xmlns="http://www.w3.org/2000/svg" width="62" height="62" fill="currentColor"
+                class="bi bi-hourglass-split" viewBox="0 0 16 16">
+                <path
+                    d="M2.5 15a.5.5 0 1 1 0-1h1v-1a4.5 4.5 0 0 1 2.557-4.06c.29-.139.443-.377.443-.59v-.7c0-.213-.154-.451-.443-.59A4.5 4.5 0 0 1 3.5 3V2h-1a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1h-1v1a4.5 4.5 0 0 1-2.557 4.06c-.29.139-.443.377-.443.59v.7c0 .213.154.451.443.59A4.5 4.5 0 0 1 12.5 13v1h1a.5.5 0 0 1 0 1zm2-13v1c0 .537.12 1.045.337 1.5h6.326c.216-.455.337-.963.337-1.5V2zm3 6.35c0 .701-.478 1.236-1.011 1.492A3.5 3.5 0 0 0 4.5 13s.866-1.299 3-1.48zm1 0v3.17c2.134.181 3 1.48 3 1.48a3.5 3.5 0 0 0-1.989-3.158C8.978 9.586 8.5 9.052 8.5 8.351z" />
+            </svg>
+            <h3>Total : {{ total_pedidos }}</h3>
+            Pedidos en espera
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-3 col-xs-6">
+        <div class=" alert-warning back-widget-set text-center animate__animated animate__heartBeat">
+            <svg xmlns="http://www.w3.org/2000/svg" width="62" height="62" fill="currentColor"
+                class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                <path
+                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+            </svg>
+            <h3>Total : {{ total_h_pedidos }}</h3>
+            Pedidos completados
+        </div>
+    </div>
+</div>
+<br>
+<br>
+<br>
+<div class="row">
+    <div class="col-md-6">
+        <!--   Kitchen Sink -->
+        <div class="panel panel-default">
+
+            <div class="panel-heading">
+                Tabla productos
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table" id="product" hidden>
+                        <thead>
+                            <tr>
+                                <th>Id_producto</th>
+                                <th>Nombre</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for productos in producto %}
+                            <tr>
+                                <td>
+                                    {{productos.id_producto}}
+                                </td>
+                                <td>
+                                    {{productos.nombre}}
+                                </td>
+                                <td>
+                                    {{productos.cantidad}}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <canvas id="stock"></canvas>
+                </div>
+            </div>
+        </div>
+        <!-- End  Kitchen Sink -->
+    </div>
+    <div class="col-md-6">
+        <!--   Basic Table  -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Reporte mensual
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio</th>
+                                <th>Total</th>
+                                <th>Fecha de entrega</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for h_pedido in h_pedido %}
+                            <tr>
+                                <td>
+                                    {{h_pedido.producto}}
+                                </td>
+                                <td>
+                                    {{h_pedido.cantidad}}
+                                </td>
+
+                                <td>
+                                    {{h_pedido.precio}}
+                                </td>
+                                <td>
+
+                                </td>
+                                <td>
+                                    {{h_pedido.fecha_entrega}}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    <canvas id="ventas"></canvas>
+                </div>
+            </div>
+        </div>
+        <!-- End  Basic Table  -->
+    </div>
+</div>
+
+<script>
+    // Codigo de pie de los productos y sus cantidades
+    // Obteniendo datos de la tabla
+    const table = document.getElementById('product');
+    const rows = table.querySelectorAll('tbody tr');
+    const labels = [];
+    const data = [];
+
+    rows.forEach(row => {
+        const nombre = row.cells[1].textContent.trim();
+        const cantidad = parseInt(row.cells[2].textContent.trim());
+        labels.push(nombre);
+        data.push(cantidad);
+    });
+
+    // Generar colores aleatorios para cada barra y para esto recibes lo que es data
+    const coloresBarras = data.map(() => {
+        const r = Math.floor(Math.random() * 200) + 55;
+        const g = Math.floor(Math.random() * 200) + 55;
+        const b = Math.floor(Math.random() * 200) + 55;
+        return `rgba(${r}, ${g}, ${b}, 0.7)`;
+    });
+
+    // Creando el gráfico de pie
+    const ctx = document.getElementById('stock').getContext('2d');
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: coloresBarras,
+                borderColor: coloresBarras.map(color => color.replace('0.7', '1')),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    enabled: true,
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
