@@ -92,11 +92,11 @@
         <!--   Basic Table  -->
         <div class="panel panel-default">
             <div class="panel-heading">
-                Reporte mensual
+                Venta Mensual
             </div>
             <div class="panel-body">
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table" id="ventitas" hidden>
                         <thead>
                             <tr>
                                 <th>Producto</th>
@@ -112,14 +112,14 @@
                                 <td>
                                     {{h_pedido.producto}}
                                 </td>
-                                <td>
+                                <td class ="cantidad">
                                     {{h_pedido.cantidad}}
                                 </td>
 
-                                <td>
+                                <td class="precio">
                                     {{h_pedido.precio}}
                                 </td>
-                                <td>
+                                <td class="total">
 
                                 </td>
                                 <td>
@@ -162,6 +162,9 @@
 
     // Creando el gráfico de pie
     const ctx = document.getElementById('stock').getContext('2d');
+    ctx.canvas.height = 400; // Alto del gráfico
+    ctx.canvas.width = 400; // Ancho del gráfico
+
     new Chart(ctx, {
         type: 'pie',
         data: {
@@ -174,7 +177,8 @@
             }]
         },
         options: {
-            responsive: true,
+            responsive: false, // Tener en false para controlar manualmente el tamaño
+            maintainAspectRatio: false, // Este permite las dimensiones que le pongas
             plugins: {
                 legend: {
                     position: 'top',
@@ -186,4 +190,97 @@
         }
     });
 </script>
+<script>
+// Selecciona la tabla usando el ID "ventitas"
+const tabla = document.getElementById('ventitas');
+
+// Selecciona todas las filas del cuerpo de la tabla
+tabla.querySelectorAll('tbody tr').forEach(row => {
+    // Obtén los valores de la cantidad y el precio
+    const cantidad = parseFloat(row.querySelector('.cantidad').textContent) || 0;
+    const precio = parseFloat(row.querySelector('.precio').textContent) || 0;
+    
+    // Calcula el total
+    const total = cantidad * precio;
+    
+    // Selecciona la celda con la clase "total"
+    const totalCell = row.querySelector('.total');
+    
+    // Crea un elemento <p> para mostrar el total
+    const totalParagraph = document.createElement('p');
+    totalParagraph.textContent = total.toFixed(2); // Formatea el número con 2 decimales
+    
+    // Limpia el contenido de la celda y añade el elemento <p>
+    totalCell.innerHTML = '';
+    totalCell.appendChild(totalParagraph);
+});
+
+
+//
+
+
+</script>
+
+<script>
+    // Selecciona la tabla usando el ID "ventitas"
+    const tabla2 = document.getElementById('ventitas');
+    const datosPorMes = {};
+
+    // Itera por las filas de la tabla2
+    tabla2.querySelectorAll('tbody tr').forEach(row => {
+        // Obtén la fecha de entrega y conviértela a mes y año
+        const fechaEntrega = row.querySelector('td:last-child').textContent;
+        const fecha = new Date(fechaEntrega);
+        const mesAnio = fecha.toLocaleDateString('es-ES', { month: 'long', year: 'numeric' });
+
+        // Obtén el total de la fila
+        const cantidad = parseFloat(row.querySelector('.cantidad').textContent) || 0;
+        const precio = parseFloat(row.querySelector('.precio').textContent) || 0;
+        const total = cantidad * precio;
+
+        // Suma los totales por mes
+        datosPorMes[mesAnio] = (datosPorMes[mesAnio] || 0) + total;
+    });
+
+    // Generar colores aleatorios para cada barra y para esto recibes lo que es data
+    const coloresBarras2 = data.map(() => {
+        const r = Math.floor(Math.random() * 200) + 55;
+        const g = Math.floor(Math.random() * 200) + 55;
+        const b = Math.floor(Math.random() * 200) + 55;
+        return `rgba(${r}, ${g}, ${b}, 0.7)`;
+    });
+
+    // Prepara los datos para el gráfico
+    const etiquetas = Object.keys(datosPorMes); // Meses
+    const valores = Object.values(datosPorMes); // Totales
+
+    // Crear el gráfico de barras
+    const ctx2 = document.getElementById('ventas').getContext('2d');
+    ctx2.canvas.height = 400; // Alto del gráfico
+    ctx2.canvas.width = 400; // Ancho del gráfico
+
+    const chart = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: etiquetas,
+            datasets: [{
+                label: 'Totales por Mes',
+                data: valores,
+                backgroundColor: coloresBarras2,
+                borderColor: coloresBarras2.map(color => color.replace('0.7', '1')),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: false, // Tener en false para controlar manualmente el tamaño
+            maintainAspectRatio: false, // Este permite las dimensiones que le pongas
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
 {% endblock %}
