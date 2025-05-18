@@ -76,7 +76,7 @@ https://templatemo.com/tm-559-zay-shop
                         <li class="nav-item">
                             <a class="nav-link" href="/cliente/in_medida">Ingresar medida</a>
                         </li>
-                        
+
                         <li class="nav-item">
                             <a class="nav-link" href="/cliente/shop">Comprar producto</a>
                         </li>
@@ -93,7 +93,7 @@ https://templatemo.com/tm-559-zay-shop
                         </div>
                     </div>
 
-                    
+
                     <a class="nav-icon position-relative text-decoration-none" href="{{ url_for('logout') }}">
                         <i class="fa fa-fw fa-user text-dark mr-3"></i>
                         <span
@@ -112,14 +112,7 @@ https://templatemo.com/tm-559-zay-shop
             <div class="w-100 pt-1 mb-5 text-right">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="" method="get" class="modal-content modal-body border-0 p-0">
-                <div class="input-group mb-2">
-                    <input type="text" class="form-control" id="inputModalSearch" name="q" placeholder="Search ...">
-                    <button type="submit" class="input-group-text bg-success text-light">
-                        <i class="fa fa-fw fa-search text-white"></i>
-                    </button>
-                </div>
-            </form>
+
         </div>
     </div>
 
@@ -156,7 +149,7 @@ https://templatemo.com/tm-559-zay-shop
                             <p>{{ producto['descripcion'] }}</p>
                             <br>
                             <h6>Cantidad del producto disponibles </h6>
-                            <p>{{ producto['cantidad'] }}</p>
+                            <p class="stock">{{ producto['cantidad'] }}</p>
                             <br>
                             <form action="{{ url_for('carrito.adcarrito') }}" method="post">
                                 <input type="hidden" name="id_cliente" value="{{ id_cliente }}">
@@ -170,29 +163,32 @@ https://templatemo.com/tm-559-zay-shop
 
                                         </ul>
                                     </div>
+                                    <!-- En tu sección del formulario, modifica los botones así: -->
                                     <div class="col-auto">
                                         <ul class="list-inline pb-3">
                                             <li class="list-inline-item text-right">
                                                 Cantidad
-                                                <input type="hidden" name="cantidad" id="product-quantity" value="1">
+                                                <input type="hidden" class="spi" name="cantidad" id="product-quantity"
+                                                    value="1">
                                             </li>
-                                            <li class="list-inline-item"><span class="btn btn-success"
-                                                    id="btn-minusi">-</span></li>
+                                            <li class="list-inline-item">
+                                                <button type="button" class="btn btn-success" id="btn-minusi">-</button>
+                                            </li>
                                             <li class="list-inline-item"><span class="badge bg-secondary"
                                                     id="var-value">1</span></li>
-                                            <li class="list-inline-item"><span class="btn btn-success"
-                                                    id="btn-plusi">+</span></li>
+                                            <li class="list-inline-item">
+                                                <button type="button" class="btn btn-success" id="btn-plusi">+</button>
+                                            </li>
                                         </ul>
                                     </div>
+
                                 </div>
                                 <div class="row pb-3">
                                     <div class="col d-grid">
-                                        <button type="submit" class="btn btn-success btn-lg" name="submit"
-                                            value="buy">Añadir al carrito</button>
+                                        <button type="submit" class="btn btn-success btn-lg">Añadir al carrito</button>
                                     </div>
                                     <div class="col d-grid" hidden>
-                                        <button type="submit" class="btn btn-success btn-lg" name="submit"
-                                            value="addtocard" hidden>Añadir al carro</button>
+
                                     </div>
                                 </div>
                             </form>
@@ -318,6 +314,89 @@ https://templatemo.com/tm-559-zay-shop
                 event.preventDefault(); // Prevenir el envío del formulario
                 alert('La cantidad no puede ser cero. Por favor, elige una cantidad mayor a cero.');
             }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Elementos del DOM
+            const stockElement = document.querySelector('.stock');
+            const quantityInput = document.getElementById('product-quantity');
+            const varValue = document.getElementById('var-value');
+            const btnMinus = document.getElementById('btn-minusi');
+            const btnPlus = document.getElementById('btn-plusi');
+            const form = document.querySelector('form');
+
+            // Validar que todos los elementos existan
+            if (!stockElement || !quantityInput || !varValue || !btnMinus || !btnPlus || !form) {
+                console.error('No se encontraron todos los elementos necesarios');
+                return;
+            }
+
+            // Obtener el stock disponible
+            const stockDisponible = parseInt(stockElement.textContent) || 0;
+            let cantidadActual = parseInt(quantityInput.value) || 1;
+
+            // Función para actualizar el estado de los botones
+            function actualizarBotones() {
+                btnMinus.disabled = (cantidadActual <= 1);
+                btnPlus.disabled = (cantidadActual >= stockDisponible);
+
+                // Cambiar estilo visual cuando están deshabilitados
+                if (btnMinus.disabled) {
+                    btnMinus.classList.add('disabled-btn');
+                } else {
+                    btnMinus.classList.remove('disabled-btn');
+                }
+
+                if (btnPlus.disabled) {
+                    btnPlus.classList.add('disabled-btn');
+                } else {
+                    btnPlus.classList.remove('disabled-btn');
+                }
+            }
+
+            // Función para cambiar la cantidad
+            function cambiarCantidad(cambio) {
+                const nuevaCantidad = cantidadActual + cambio;
+
+                // Validar que esté dentro de los límites permitidos
+                if (nuevaCantidad < 1 || nuevaCantidad > stockDisponible) {
+                    return;
+                }
+
+                // Actualizar valores
+                cantidadActual = nuevaCantidad;
+                quantityInput.value = cantidadActual;
+                varValue.textContent = cantidadActual;
+
+                // Actualizar estado de los botones
+                actualizarBotones();
+            }
+
+            // Eventos para los botones
+            btnMinus.addEventListener('click', function () {
+                cambiarCantidad(-1);
+            });
+
+            btnPlus.addEventListener('click', function () {
+                cambiarCantidad(1);
+            });
+
+            // Validar al enviar el formulario
+            form.addEventListener('submit', function (e) {
+                if (cantidadActual > stockDisponible) {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: 'Error',
+                        text: `No hay suficiente stock. Solo quedan ${stockDisponible} unidades disponibles.`,
+                        icon: 'error',
+                        confirmButtonText: 'Entendido'
+                    });
+                }
+            });
+
+            // Inicializar estado de los botones
+            actualizarBotones();
         });
     </script>
 </body>

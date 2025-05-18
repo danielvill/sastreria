@@ -13,7 +13,7 @@ from modules.chaleco import Chaleco
 from modules.saco import Saco
 from reportlab.lib.pagesizes import A4 ,letter
 from reportlab.pdfgen import canvas
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer ,Image
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
 import io
@@ -222,10 +222,18 @@ def generar_pdf_blusa():
     doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
     elements = []
     
-    # Añadir título
+    # Obtener datos del cliente para el encabezado
+    cliente_data = db["cliente"].find_one({"id_cliente": id_cliente})
+    
+    # Extraer nombre y teléfono del cliente
+    nombre_cliente = cliente_data.get("apellido", "Cliente") if cliente_data else "Cliente"
+    telefono_cliente = cliente_data.get("telefono", "No disponible") if cliente_data else "No disponible"
+    
+    # Añadir título con nombre y teléfono del cliente
     styles = getSampleStyleSheet()
-    elements.append(Paragraph(f"Medidas de Blusa - {nombre_cliente}", styles['Heading1']))
-    elements.append(Paragraph(f"ID Cliente: {id_cliente}", styles['Heading2']))
+    elements.append(Paragraph(f"ID Cliente: {id_cliente}", styles['Heading1']))
+    elements.append(Paragraph(f"Nombre del cliente - {nombre_cliente}", styles['Heading2']))
+    elements.append(Paragraph(f"Celular: {telefono_cliente}", styles['Heading2']))
     
     # Preparar los datos para la tabla
     data = [
@@ -331,10 +339,15 @@ def generar_pdf_camisa():
     doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
     elements = []
     
-    # Añadir título
+    # Extraer nombre y teléfono del cliente
+    nombre_cliente = cliente_data.get("apellido", "Cliente") if cliente_data else "Cliente"
+    telefono_cliente = cliente_data.get("telefono", "No disponible") if cliente_data else "No disponible"
+    
+    # Añadir título con nombre y teléfono del cliente
     styles = getSampleStyleSheet()
-    elements.append(Paragraph(f"Medidas de camisa - {nombre_cliente}", styles['Heading1']))
-    elements.append(Paragraph(f"ID Cliente: {id_cliente}", styles['Heading2']))
+    elements.append(Paragraph(f"ID Cliente: {id_cliente}", styles['Heading1']))
+    elements.append(Paragraph(f"Nombre del cliente - {nombre_cliente}", styles['Heading2']))
+    elements.append(Paragraph(f"Celular: {telefono_cliente}", styles['Heading2']))
     
     # Preparar los datos para la tabla
     data = [
@@ -439,10 +452,15 @@ def generar_pdf_chaleco():
     doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
     elements = []
     
-    # Añadir título
+    # Extraer nombre y teléfono del cliente
+    nombre_cliente = cliente_data.get("apellido", "Cliente") if cliente_data else "Cliente"
+    telefono_cliente = cliente_data.get("telefono", "No disponible") if cliente_data else "No disponible"
+    
+    # Añadir título con nombre y teléfono del cliente
     styles = getSampleStyleSheet()
-    elements.append(Paragraph(f"Medidas de chaleco - {nombre_cliente}", styles['Heading1']))
-    elements.append(Paragraph(f"ID Cliente: {id_cliente}", styles['Heading2']))
+    elements.append(Paragraph(f"ID Cliente: {id_cliente}", styles['Heading1']))
+    elements.append(Paragraph(f"Nombre del cliente - {nombre_cliente}", styles['Heading2']))
+    elements.append(Paragraph(f"Celular: {telefono_cliente}", styles['Heading2']))
     
     # Preparar los datos para la tabla
     data = [
@@ -541,10 +559,15 @@ def generar_pdf_falda():
     doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
     elements = []
     
-    # Añadir título
+    # Extraer nombre y teléfono del cliente
+    nombre_cliente = cliente_data.get("apellido", "Cliente") if cliente_data else "Cliente"
+    telefono_cliente = cliente_data.get("telefono", "No disponible") if cliente_data else "No disponible"
+    
+    # Añadir título con nombre y teléfono del cliente
     styles = getSampleStyleSheet()
-    elements.append(Paragraph(f"Medidas de falda - {nombre_cliente}", styles['Heading1']))
-    elements.append(Paragraph(f"ID Cliente: {id_cliente}", styles['Heading2']))
+    elements.append(Paragraph(f"ID Cliente: {id_cliente}", styles['Heading1']))
+    elements.append(Paragraph(f"Nombre del cliente - {nombre_cliente}", styles['Heading2']))
+    elements.append(Paragraph(f"Celular: {telefono_cliente}", styles['Heading2']))
     
     # Preparar los datos para la tabla
     data = [
@@ -653,10 +676,15 @@ def generar_pdf_leva():
     doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
     elements = []
     
-    # Añadir título
+    # Extraer nombre y teléfono del cliente
+    nombre_cliente = cliente_data.get("apellido", "Cliente") if cliente_data else "Cliente"
+    telefono_cliente = cliente_data.get("telefono", "No disponible") if cliente_data else "No disponible"
+    
+    # Añadir título con nombre y teléfono del cliente
     styles = getSampleStyleSheet()
-    elements.append(Paragraph(f"Medidas de leva - {nombre_cliente}", styles['Heading1']))
-    elements.append(Paragraph(f"ID Cliente: {id_cliente}", styles['Heading2']))
+    elements.append(Paragraph(f"ID Cliente: {id_cliente}", styles['Heading1']))
+    elements.append(Paragraph(f"Nombre del cliente - {nombre_cliente}", styles['Heading2']))
+    elements.append(Paragraph(f"Celular: {telefono_cliente}", styles['Heading2']))
     
     # Preparar los datos para la tabla
     data = [
@@ -767,10 +795,15 @@ def generar_pdf_pantalon():
     doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
     elements = []
     
-    # Añadir título
+    # Extraer nombre y teléfono del cliente
+    nombre_cliente = cliente_data.get("apellido", "Cliente") if cliente_data else "Cliente"
+    telefono_cliente = cliente_data.get("telefono", "No disponible") if cliente_data else "No disponible"
+    
+    # Añadir título con nombre y teléfono del cliente
     styles = getSampleStyleSheet()
-    elements.append(Paragraph(f"Medidas de pantalon - {nombre_cliente}", styles['Heading1']))
-    elements.append(Paragraph(f"ID Cliente: {id_cliente}", styles['Heading2']))
+    elements.append(Paragraph(f"ID Cliente: {id_cliente}", styles['Heading1']))
+    elements.append(Paragraph(f"Nombre del cliente - {nombre_cliente}", styles['Heading2']))
+    elements.append(Paragraph(f"Celular: {telefono_cliente}", styles['Heading2']))
     
     # Preparar los datos para la tabla
     data = [
@@ -851,7 +884,7 @@ def saco():
             flash("Datos ya ingresados no puede ingresar de nuevo", "alert")
             return render_template('form/saco.html', id_cliente=id_cliente)
         
-        saco = Saco(id_cliente, talla_delantero, largo_saco, ancho_espalda, largo_manga, puño, ancho_brazo, cont_pecho, cont_cintura, pecho, alto_busto, distancia_busto, talla_espalda, media_espalda, escote)
+        saco = Saco(id_cliente, talla_dealntero, largo_saco, ancho_espalda, largo_manga, puño, ancho_brazo, cont_pecho, cont_cintura, pecho, alto_busto, distancia_busto, talla_espalda, media_espalda, escote)
         db["saco"].insert_one(saco.SacoDBCollection())
         flash("Medidas de saco guardada", "success")
         return redirect(url_for('medidas.admedi'))
@@ -886,10 +919,18 @@ def generar_pdf_saco():
     doc = SimpleDocTemplate(pdf_buffer, pagesize=letter)
     elements = []
     
-    # Añadir título
+    # Extraer nombre y teléfono del cliente
+    nombre_cliente = cliente_data.get("apellido", "Cliente") if cliente_data else "Cliente"
+    telefono_cliente = cliente_data.get("telefono", "No disponible") if cliente_data else "No disponible"
+    
+    
+
+    # Añadir título con nombre y teléfono del cliente
     styles = getSampleStyleSheet()
-    elements.append(Paragraph(f"Medidas de saco - {nombre_cliente}", styles['Heading1']))
-    elements.append(Paragraph(f"ID Cliente: {id_cliente}", styles['Heading2']))
+    
+    elements.append(Paragraph(f"ID Cliente: {id_cliente}", styles['Heading1']))
+    elements.append(Paragraph(f"Nombre del cliente - {nombre_cliente}", styles['Heading2']))
+    elements.append(Paragraph(f"Celular: {telefono_cliente}", styles['Heading2']))
     
     # Preparar los datos para la tabla
     data = [

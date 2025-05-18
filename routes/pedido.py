@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import Blueprint, make_response, render_template, request, flash, session, redirect, url_for,send_file
 from controllers.database import Conexion as dbase
 from modules.pedido import Pedido
@@ -7,7 +8,7 @@ from bson.errors import InvalidId
 import io 
 from reportlab.lib.pagesizes import A4 ,letter
 from reportlab.pdfgen import canvas
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer,Image
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
 
@@ -254,10 +255,18 @@ def gracias():
             title = Paragraph("Lucero Alta Costura", style_title)
             elements.append(title)
             elements.append(Spacer(1, 12))
-
+            
+            cliente_data = db["cliente"].find_one({"id_cliente": id_cliente})
             # Código del cliente
-            codigo_cliente = Paragraph(f"Código: {id_cliente}", style_normal)
-            elements.append(codigo_cliente)
+            nombre_cliente = cliente_data.get("apellido", "Cliente") if cliente_data else "Cliente"
+            
+            # Agrega la imagen
+            imagen = Image('static/img/logo.png', width=200, height=100)
+            imagen.hAlign = 'CENTER'
+            elements.append(imagen)
+            elements.append(Spacer(1, 12))
+           
+            elements.append(Paragraph(f"Nombre del cliente - {nombre_cliente}", styles['Heading2']))
             elements.append(Spacer(1, 12))
 
             # Crear la tabla con los datos de los pedidos
@@ -288,8 +297,13 @@ def gracias():
             ]))
 
             elements.append(table)
+            # Añadir fecha de generación
+            elements.append(Spacer(1, 12))
+            
+            elements.append(Paragraph(f"Generado: {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}", styles['Normal']))
+    
             doc.build(elements)
-
+            
             # Mover el puntero al inicio del buffer
             buffer.seek(0)
 
