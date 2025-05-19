@@ -252,16 +252,13 @@ def gracias():
             style_normal = styles['Normal']
 
             # Título del PDF
-            title = Paragraph("Lucero Alta Costura", style_title)
-            elements.append(title)
-            elements.append(Spacer(1, 12))
             
             cliente_data = db["cliente"].find_one({"id_cliente": id_cliente})
             # Código del cliente
             nombre_cliente = cliente_data.get("apellido", "Cliente") if cliente_data else "Cliente"
             
             # Agrega la imagen
-            imagen = Image('static/img/logo.png', width=200, height=100)
+            imagen = Image('static/img/lucero.jpg', width=100, height=200)
             imagen.hAlign = 'CENTER'
             elements.append(imagen)
             elements.append(Spacer(1, 12))

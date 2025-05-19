@@ -77,12 +77,16 @@ def v_ped(id):
         flash("Inicia sesión con tu usuario y contraseña")
         return redirect(url_for('h_pedido.index'))
     
-    h_pedidos_cursor = db['h_pedido'].find({"id_cliente": id})  # Obtener el cursor
-    h_pedidos = list(h_pedidos_cursor)  # Convertir el cursor en una lista
-
+    # Obtener los datos del cliente
+    cliente = db['cliente'].find_one({"id_cliente": id})
+    
+    # Obtener los pedidos del cliente
+    h_pedidos_cursor = db['h_pedido'].find({"id_cliente": id})
+    h_pedidos = list(h_pedidos_cursor)
+    
     if not h_pedidos:
         print(f"No se encontraron pedidos para el cliente con id_cliente={id}")
     else:
         print(f"Pedidos encontrados para el cliente con id_cliente={id}: {h_pedidos}")
-
-    return render_template("admin/v_pedido.html", h_pedidos=h_pedidos)
+    
+    return render_template("admin/v_pedido.html", h_pedidos=h_pedidos, cliente=cliente)

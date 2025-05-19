@@ -79,12 +79,23 @@
                 <p>Alta costura.<br>¡Este es tu momento, así que disfrútalo!</p>
             </div>
             <form>
+                
+
                 <div class="form-group">
-                    <label for="nombre">Codigo del cliente:</label>
-                    {% if h_pedidos and h_pedidos|length > 0 %}
-                    <p>&nbsp; {{ h_pedidos[0].id_cliente }}</p> <!-- Mostrar id_cliente del primer pedido -->
+                    <label for="nombre">Nombre del cliente:</label>
+                    {% if cliente %}
+                    <p>&nbsp; {{ cliente.nombre }} {{ cliente.apellido }}</p>
                     {% else %}
-                    <p>&nbsp; No se encontraron pedidos para este cliente.</p>
+                    <p>&nbsp; Cliente no encontrado.</p>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">Teléfono del cliente:</label>
+                    {% if cliente %}
+                    <p>&nbsp; {{ cliente.telefono }}</p>
+                    {% else %}
+                    <p>&nbsp; Cliente no encontrado.</p>
                     {% endif %}
                 </div>
                 <div class="form-group">
@@ -119,7 +130,7 @@
                             </div>
                         </div>
                         {% endif %}
-                        
+
                     </div>
                     <br>
                     <a href="/admin/h_pedido" class="btn btn-secondary">Regresar</a>
